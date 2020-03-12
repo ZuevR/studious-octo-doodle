@@ -14,6 +14,7 @@ pipeline {
                 exit 1
                 fi
 
+                echo $APP_ENV_NAME
                 echo "GIT_BRANCH=${KANE_BRANCH}" >> env-properties
                 echo "BUILD_TYPE=${BUILD_TYPE}" >> env-properties
                 '''
