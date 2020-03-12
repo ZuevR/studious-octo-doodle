@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        APP_ENV_NAME = $KANE_BRANCH
+    }
+
     stages {
         stage('Prepare ENV') {
             steps {
@@ -10,35 +14,8 @@ pipeline {
                 exit 1
                 fi
 
-                #Construct JGIT_TAG variable to update git tag
-
-                case ${KANE_BRANCH} in
-                	dev)
-                	environment {
-                	    APP_ENV_NAME = development
-                	}
-                    ;;
-                	qa)
-                	environment {
-                	    APP_ENV_NAME = qa
-                	}
-                    ;;
-                   	stage)
-                	environment {
-                	    APP_ENV_NAME = uat
-                	}
-                    ;;
-                	*)
-                    echo "No Environment Found"
-                    exit 1
-                    ;;
-                esac
-
-                environment {
-                    GIT_BRANCH=${KANE_BRANCH}
-                    BUILD_TYPE=${BUILD_TYPE}
-                }
-
+                echo "GIT_BRANCH=${KANE_BRANCH}" >> env-properties
+                echo "BUILD_TYPE=${BUILD_TYPE}" >> env-properties
                 '''
             }
         }
