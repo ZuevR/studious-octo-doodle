@@ -12,8 +12,8 @@ pipeline {
 
                 #Construct JGIT_TAG variable to update git tag
 
-                echo $GIT_BRANCH
-                case ${GIT_BRANCH} in
+                echo $GIT_BRANC
+                case ${GIT_BRANC} in
                 	dev)
                     echo "APP_ENV_NAME=development" > env-properties
                     ;;
