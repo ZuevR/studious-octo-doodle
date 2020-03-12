@@ -5,10 +5,16 @@ pipeline {
         stage('Prepare ENV') {
             steps {
                 sh '''#!/bin/bash
+                if [ -z ${tagToCreate} ]; then
+                echo "tagToCreate field is missing, please check"
+                exit 1
+                fi
+
                 #Construct JGIT_TAG variable to update git tag
 
                 case ${GIT_BRANCH} in
                 	dev)
+                	echo "HERE"
                     echo "APP_ENV_NAME=development" > env-properties
                     ;;
                 	qa)
