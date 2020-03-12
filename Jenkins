@@ -14,13 +14,19 @@ pipeline {
 
                 case ${KANE_BRANCH} in
                 	dev)
-                    echo "APP_ENV_NAME=development" > env-properties
+                	environment {
+                	    APP_ENV_NAME = development
+                	}
                     ;;
                 	qa)
-                    echo "APP_ENV_NAME=qa" > env-properties
+                	environment {
+                	    APP_ENV_NAME = qa
+                	}
                     ;;
                    	stage)
-                    echo "APP_ENV_NAME=uat" > env-properties
+                	environment {
+                	    APP_ENV_NAME = uat
+                	}
                     ;;
                 	*)
                     echo "No Environment Found"
@@ -28,11 +34,17 @@ pipeline {
                     ;;
                 esac
 
-                echo "GIT_BRANCH=${KANE_BRANCH}" >> env-properties
-                echo "BUILD_TYPE=${BUILD_TYPE}" >> env-properties
+                environment {
+                    GIT_BRANCH=${KANE_BRANCH}
+                    BUILD_TYPE=${BUILD_TYPE}
+                }
 
                 '''
             }
+        }
+
+        stage('Venue Backend Tag') {
+
         }
     }
 }
