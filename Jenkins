@@ -1,12 +1,6 @@
 pipeline {
     agent any
 
-    environment{
-            #JGIT_TAG="${tagToCreate}.${BUILD_NUMBER}-${APP_ENV}"
-            #TEST_BASE="${ECR_URL}/${APP_NAME}:latest"
-            #CLUSTER="JENKINS-TEST"
-        }
-
     stages {
         stage('Prepare ENV') {
             steps {
