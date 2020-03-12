@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        APP_ENV_NAME = ${KANE_BRANCH}
+        APP_ENV_NAME = "${KANE_BRANCH}"
     }
 
     stages {
