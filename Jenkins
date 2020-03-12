@@ -4,7 +4,31 @@ pipeline {
     stages {
         stage('Prepare ENV') {
             steps {
-                sh 'echo hello'
+                sh '''#!/bin/bash
+                if [ -z ${tagToCreate} ]; then
+                echo "tagToCreate field is missing, please check"
+                exit 1
+                fi
+
+                #Construct JGIT_TAG variable to update git tag
+
+                case ${GIT_BRANCH} in
+                	dev)
+                    echo "APP_ENV_NAME=development" > env-properties
+                    ;;
+                	qa)
+                    echo "APP_ENV_NAME=qa" > env-properties
+                    ;;
+                   	stage)
+                    echo "APP_ENV_NAME=uat" > env-properties
+                    ;;
+                	*)
+                    echo "No Environment Found"
+                    exit 1
+                    ;;
+                esac
+
+                '''
             }
         }
     }
