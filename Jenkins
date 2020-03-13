@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        APP_ENV_NAME = "${KANE_BRANCH}"
         JGIT_TAG="${tagToCreate}.${BUILD_NUMBER}.fun-be-${APP_ENV_NAME}"
     }
 
@@ -11,10 +10,16 @@ pipeline {
         stage('Prepare ENV') {
             steps {
                 script {
-                    if(true) {
-                        echo "${KANE_BRANCH}"
+                    if ("${KANE_BRANCH}" == "dev") {
+                        env.APP_ENV_NAME = "development"
+                    } else if ("${KANE_BRANCH}" == "qa") {
+                        env.APP_ENV_NAME = "qa"
+                    } else if ("${KANE_BRANCH}" == "stage") {
+                        env.APP_ENV_NAME = "uat"
+                    } else {
+                        echo "KANE_BRANCH field is missing, please check"
+                        exit 1
                     }
-                    if ("${KANE_BRANCH}" == "dev") { echo "11111" }
                 }
 
                 sh '''#!/bin/bash
