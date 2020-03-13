@@ -29,7 +29,6 @@ pipeline {
 
                 #sh 'git tag -a -f ${JGIT_TAG} -m "Jenkins build tag"'
                 #sshagent(["${GIT_CREDS}"]) {
-                    #sh "git push git@github.com:funi-main/kane-funimation-v2.git ${JGIT_TAG}"
                 #}
             }
         }
