@@ -24,7 +24,7 @@ pipeline {
         stage('set tags') {
             steps {
                 dir('src'){
-                git branch: "${KANE_BRANCH}",
+                git branch: "venue",
                 credentialsId: "${GIT_CREDS}",
                 url: 'git@github.com:funi-main/source2-main.git'
                 }
