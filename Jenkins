@@ -52,7 +52,7 @@ pipeline {
                     // sshagent(["${GIT_CREDS}"]) {
                     //    sh "git push git@github.com:funi-main/source2-main.git ${JGIT_TAG}"
                     // }
-                }
+                //}
                 //dir('src'){
                     //git branch: "${GIT_BRANCH}"
                     //credentialsId: "${GIT_CREDS}",
