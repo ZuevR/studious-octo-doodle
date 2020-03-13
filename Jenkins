@@ -26,12 +26,12 @@ pipeline {
                     }
                 }
 
-                sh '''#!/bin/bash
-                if [ -z ${tagToCreate} ]; then
-                echo "tagToCreate field is missing, please check"
-                exit 1
-                fi
-                '''
+                //sh '''#!/bin/bash
+                //if [ -z ${tagToCreate} ]; then
+                //echo "tagToCreate field is missing, please check"
+                //exit 1
+                //fi
+                //'''
             }
         }
 
