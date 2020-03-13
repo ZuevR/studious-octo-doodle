@@ -11,7 +11,8 @@ pipeline {
         stage('Prepare ENV') {
             steps {
                 script {
-                    env.SOMETHING = "1" // creates env.SOMETHING variable
+                    if (KANE_BRANCH == 'dev') { echo 1 }
+                    // env.KANE_BRANCH = "${KANE_BRANCH}"
                 }
 
                 sh '''#!/bin/bash
@@ -19,18 +20,12 @@ pipeline {
                 echo "tagToCreate field is missing, please check"
                 exit 1
                 fi
-
-                echo "GIT_BRANCH=${KANE_BRANCH}" >> env-properties
-                echo "BUILD_TYPE=${BUILD_TYPE}" >> env-properties
                 '''
             }
         }
 
         stage('set tags') {
             steps {
-                script {
-                    echo "${env.SOMETHING}"
-                }
 
                 dir('src') {
                     checkout([$class: 'GitSCM',
