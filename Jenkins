@@ -45,7 +45,7 @@ pipeline {
                      //}
                 }
 
-                dir('libDir') {
+                dir('code-dir') {
                     checkout([$class: 'GitSCM',
                         branches: [[name: '*/${KANE_BRANCH}']],
                         doGenerateSubmoduleConfigurations: false,
@@ -60,7 +60,7 @@ pipeline {
                     sh 'git tag -a -f ${JGIT_TAG} -m "Jenkins build tag"'
                 }
 
-                dir('sourceDir') {
+                dir('source-dir') {
                     checkout([$class: 'GitSCM',
                         branches: [[name: '*/${KANE_BRANCH}']],
                         doGenerateSubmoduleConfigurations: false,
@@ -71,6 +71,21 @@ pipeline {
                         submoduleCfg: [],
                         userRemoteConfigs: [[credentialsId: "${GIT_CREDS}",
                         url: 'git@github.com:funi-main/source2apps.git']]
+                    ])
+                    sh 'git tag -a -f ${JGIT_TAG} -m "Jenkins build tag"'
+                }
+
+                dir('funimation-source-dir') {
+                    checkout([$class: 'GitSCM',
+                        branches: [[name: '${KANE_BRANCH}']],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [
+                            [$class: 'RelativeTargetDirectory', relativeTargetDir: 'lib/source2apps'],
+                            [$class: 'LocalBranch', localBranch: "**"]
+                          ],
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[credentialsId: "${GIT_CREDS}",
+                        url: 'git@github.com:funi-main/funimation-source.git']]
                     ])
                     sh 'git tag -a -f ${JGIT_TAG} -m "Jenkins build tag"'
                 }
