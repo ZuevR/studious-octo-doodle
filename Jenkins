@@ -50,7 +50,7 @@ pipeline {
                         branches: [[name: '*/${KANE_BRANCH}']],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [
-                            [$class: 'RelativeTargetDirectory', relativeTargetDir: '/lib/code'],
+                            [$class: 'RelativeTargetDirectory', relativeTargetDir: 'lib/code'],
                             [$class: 'LocalBranch', localBranch: "**"]
                           ],
                         submoduleCfg: [],
