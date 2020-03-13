@@ -11,8 +11,7 @@ pipeline {
             steps {
                 script {
                     if ("${tagToCreate}".isEmpty()) {
-                        echo "tagToCreate field is missing, please check"
-                        exit 1
+                        throw new Exception("tagToCreate field is missing, please check")
                     }
                     if ("${WORK_BRANCH}" == "dev") {
                         env.APP_ENV_NAME = "development"
