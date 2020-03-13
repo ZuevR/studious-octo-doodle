@@ -6,7 +6,6 @@ pipeline {
         JGIT_TAG="${tagToCreate}.${BUILD_NUMBER}.fun-be-${APP_ENV_NAME}"
     }
 
-    sh 'echo 1'
 
     stages {
         stage('Prepare ENV') {
