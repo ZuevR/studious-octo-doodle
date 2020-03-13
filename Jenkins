@@ -24,7 +24,7 @@ pipeline {
         stage('set tags') {
             steps {
                 dir('src'){
-                    git branch: "dev",
+                    git branch: "master",
                     credentialsId: "${GIT_CREDS}",
                     url: 'git@github.com:funi-main/source2-main.git'
                     // sh 'git tag -a -f ${JGIT_TAG} -m "Jenkins build tag"'
