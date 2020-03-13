@@ -14,7 +14,7 @@ pipeline {
                     if(true) {
                         echo "${KANE_BRANCH}"
                     }
-                    if ('${KANE_BRANCH}' == "dev") { echo "11111" }
+                    if ("${KANE_BRANCH}" == "dev") { echo "11111" }
                 }
 
                 sh '''#!/bin/bash
