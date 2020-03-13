@@ -53,7 +53,7 @@ pipeline {
                           [
                             $class: 'SparseCheckoutPaths',
                             sparseCheckoutPaths: [
-                              [ $class: 'SparseCheckoutPath', path: 'lib/code' ]]
+                              [ $class: 'SparseCheckoutPath', path: 'lib/code/' ]]
                             ],
                             [$class: 'LocalBranch', localBranch: "**"]
                           ],
