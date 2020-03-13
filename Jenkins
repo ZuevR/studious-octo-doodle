@@ -22,12 +22,12 @@ pipeline {
         }
 
         stage('set tags') {
-            dir('src'){
+            steps {
+                dir('src'){
                 git branch: "${KANE_BRANCH}",
                 credentialsId: "${GIT_CREDS}",
                 url: 'git@github.com:funi-main/source2-main.git'
-
-
+                }
             }
         }
     }
