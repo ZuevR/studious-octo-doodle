@@ -10,14 +10,18 @@ pipeline {
         stage('Prepare ENV') {
             steps {
                 script {
-                    if ("${KANE_BRANCH}" == "dev") {
+                    if ("${tagToCreate}".isEmpty()) {
+                        echo "tagToCreate field is missing, please check"
+                        exit 1
+                    }
+                    if ("${WORK_BRANCH}" == "dev") {
                         env.APP_ENV_NAME = "development"
-                    } else if ("${KANE_BRANCH}" == "qa") {
+                    } else if ("${WORK_BRANCH}" == "qa") {
                         env.APP_ENV_NAME = "qa"
-                    } else if ("${KANE_BRANCH}" == "stage") {
+                    } else if ("${WORK_BRANCH}" == "stage") {
                         env.APP_ENV_NAME = "uat"
                     } else {
-                        echo "KANE_BRANCH field is missing, please check"
+                        echo "WORK_BRANCH field is missing, please check"
                         exit 1
                     }
                 }
@@ -35,7 +39,6 @@ pipeline {
             steps {
 
                 dir('src') {
-                    script { echo env.APP_ENV_NAME }
                     checkout([$class: 'GitSCM',
                         branches: [[name: '*/venue']],
                         doGenerateSubmoduleConfigurations: false,
@@ -59,7 +62,7 @@ pipeline {
 
                 dir('code-dir') {
                     checkout([$class: 'GitSCM',
-                        branches: [[name: '*/${KANE_BRANCH}']],
+                        branches: [[name: '*/${WORK_BRANCH}']],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [
                             [$class: 'RelativeTargetDirectory', relativeTargetDir: 'lib/code'],
@@ -74,7 +77,7 @@ pipeline {
 
                 dir('source-dir') {
                     checkout([$class: 'GitSCM',
-                        branches: [[name: '*/${KANE_BRANCH}']],
+                        branches: [[name: '*/${WORK_BRANCH}']],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [
                             [$class: 'RelativeTargetDirectory', relativeTargetDir: 'lib/source2apps'],
@@ -89,7 +92,7 @@ pipeline {
 
                 dir('funimation-source-dir') {
                     checkout([$class: 'GitSCM',
-                        branches: [[name: '${KANE_BRANCH}']],
+                        branches: [[name: '${WORK_BRANCH}']],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [
                             [$class: 'RelativeTargetDirectory', relativeTargetDir: 'lib/source2apps'],
