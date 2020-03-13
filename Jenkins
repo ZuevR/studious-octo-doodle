@@ -11,7 +11,7 @@ pipeline {
         stage('Prepare ENV') {
             steps {
                 script {
-                    if ($KANE_BRANCH == 'dev') { echo 1 }
+                    if ("$KANE_BRANCH" == 'dev') { echo 1 }
                     // env.KANE_BRANCH = "${KANE_BRANCH}"
                 }
 
