@@ -35,6 +35,7 @@ pipeline {
             steps {
 
                 dir('src') {
+                    script { echo env.APP_ENV_NAME }
                     checkout([$class: 'GitSCM',
                         branches: [[name: '*/venue']],
                         doGenerateSubmoduleConfigurations: false,
