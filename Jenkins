@@ -45,13 +45,20 @@ pipeline {
                      //}
                 }
 
-                dir('CoreDir-2') {
-
-                                        git branch: "${KANE_BRANCH}",
-                                        credentialsId: "${GIT_CREDS}",
-                                        url: 'git@github.com:funi-main/source-2.git'
-                                    }
-
+                dir('CoreDir') {
+                    checkout([$class: 'GitSCM',
+                        branches: [[name: '*/${KANE_BRANCH}']],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [
+                            [$class: 'RelativeTargetDirectory', relativeTargetDir: '/lib/code'],
+                            [$class: 'LocalBranch', localBranch: "**"]
+                          ],
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[credentialsId: "${GIT_CREDS}",
+                        url: 'git@github.com:funi-main/source-2.git']]
+                    ])
+                    sh 'git tag -a -f ${JGIT_TAG} -m "Jenkins build tag"'
+                }
             }
         }
     }
