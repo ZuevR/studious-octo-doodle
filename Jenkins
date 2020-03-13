@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        JGIT_TAG="${tagToCreate}.${BUILD_NUMBER}.fun-fe-${APP_ENV}"
         APP_ENV_NAME = "${KANE_BRANCH}"
+        JGIT_TAG="${tagToCreate}.${BUILD_NUMBER}.fun-be-${APP_ENV_NAME}"
     }
 
     stages {
