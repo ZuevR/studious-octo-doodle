@@ -12,7 +12,7 @@ pipeline {
             steps {
                 script {
                     if(true) {
-                        echo '${KANE_BRANCH}'
+                        echo "${KANE_BRANCH}"
                     }
                     if ('${KANE_BRANCH}' == "dev") { echo "11111" }
                 }
