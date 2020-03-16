@@ -21,7 +21,6 @@ pipeline {
                         echo "WORK_BRANCH field is missing, please check"
                         exit 1
                     }
-                    echo env.JGIT_TAG
                 }
             }
         }
@@ -54,7 +53,7 @@ pipeline {
 
                 dir('code-dir') {
                     checkout([$class: 'GitSCM',
-                        branches: [[name: '*/${WORK_BRANCH}']],
+                        branches: [[name: 'tags/${JGIT_TAG}']],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [
                             [$class: 'RelativeTargetDirectory', relativeTargetDir: 'lib/code'],
