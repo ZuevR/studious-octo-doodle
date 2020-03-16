@@ -28,6 +28,7 @@ pipeline {
 
         stage('Set tags') {
             steps {
+                dir('src') {
                     checkout([$class: 'GitSCM',
                         branches: [[name: '*/venue']],
                         doGenerateSubmoduleConfigurations: false,
@@ -49,7 +50,9 @@ pipeline {
                      //sshagent(["${GIT_CREDS}"]) {
                      //   sh "git push git@github.com:funi-main/source2-main.git ${JGIT_TAG}"
                      //}
+                }
 
+                dir('code-dir') {
                     checkout([$class: 'GitSCM',
                         branches: [[name: '*/${WORK_BRANCH}']],
                         doGenerateSubmoduleConfigurations: false,
@@ -65,7 +68,9 @@ pipeline {
                     //sshagent(["${GIT_CREDS}"]) {
                     //   sh "git push git@github.com:funi-main/source-2.git ${JGIT_TAG}"
                     //}
+                }
 
+                dir('source-dir') {
                     checkout([$class: 'GitSCM',
                         branches: [[name: '*/${WORK_BRANCH}']],
                         doGenerateSubmoduleConfigurations: false,
@@ -81,6 +86,7 @@ pipeline {
                     //sshagent(["${GIT_CREDS}"]) {
                     //   sh "git@github.com:funi-main/source2apps.git ${JGIT_TAG}"
                     //}
+                }
 
 
                     checkout([$class: 'GitSCM',
@@ -104,6 +110,7 @@ pipeline {
 
         stage('Venue Migrations') {
             steps{
+                dir('code-dir') {
                     checkout([$class: 'GitSCM',
                         branches: [[name: "tags/${env.JGIT_TAG}"]],
                         doGenerateSubmoduleConfigurations: false,
@@ -115,7 +122,9 @@ pipeline {
                         userRemoteConfigs: [[credentialsId: "${GIT_CREDS}",
                         url: 'git@github.com:funi-main/source-2.git']]
                     ])
+                }
 
+                dir('source-dir') {
                     checkout([$class: 'GitSCM',
                         branches: [[name: "tags/${env.JGIT_TAG}"]],
                         doGenerateSubmoduleConfigurations: false,
@@ -127,7 +136,9 @@ pipeline {
                         userRemoteConfigs: [[credentialsId: "${GIT_CREDS}",
                         url: 'git@github.com:funi-main/source2apps.git']]
                     ])
+                }
 
+                dir('funimation-source-dir') {
                     checkout([$class: 'GitSCM',
                         branches: [[name: "tags/${env.JGIT_TAG}"]],
                         doGenerateSubmoduleConfigurations: false,
@@ -139,7 +150,9 @@ pipeline {
                         userRemoteConfigs: [[credentialsId: "${GIT_CREDS}",
                         url: 'git@github.com:funi-main/funimation-source.git']]
                     ])
+                }
 
+                dir('geoip') {
                     checkout([$class: 'GitSCM',
                         branches: [[name: '*/master']],
                         doGenerateSubmoduleConfigurations: false,
@@ -151,14 +164,15 @@ pipeline {
                         userRemoteConfigs: [[credentialsId: "${GIT_CREDS}",
                         url: 'git@github.com:maxmind/geoipupdate.git']]
                     ])
+                }
 
                 timestamps {
                     ansiColor('xterm') {
                         sh '''#!/bin/bash
-                        sed -i "s/BUILD_NUMBER_PLACEHOLDER/${BUILD_NUMBER}/g" backend/Dockerfile
-                        sed -i "s/JENKINS_JOB_NAME_PLACEHOLDER/${JOB_NAME}/g" backend/Dockerfile
-                        sed -i "s/GIT_TAG_PLACEHOLDER/${JGIT_TAG:-Untagged}/g" backend/Dockerfile
-                        sed -i "s/GIT_BRANCH_PLACEHOLDER/${WORK_BRANCH}/g" backend/Dockerfile
+                        sed -i "s/BUILD_NUMBER_PLACEHOLDER/${BUILD_NUMBER}/g" src/backend/Dockerfile
+                        sed -i "s/JENKINS_JOB_NAME_PLACEHOLDER/${JOB_NAME}/g" src/backend/Dockerfile
+                        sed -i "s/GIT_TAG_PLACEHOLDER/${JGIT_TAG:-Untagged}/g" src/backend/Dockerfile
+                        sed -i "s/GIT_BRANCH_PLACEHOLDER/${WORK_BRANCH}/g" src/backend/Dockerfile
                         '''
                     }
                 }
