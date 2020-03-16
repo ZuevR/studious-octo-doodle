@@ -13,7 +13,7 @@ pipeline {
                         env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-be-${APP_ENV_NAME}"
                     } else if ("${WORK_BRANCH}" == "qa") {
                         env.APP_ENV_NAME = "qa"
-                        env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-be-${APP_ENV_NAME}"
+                        env.JGIT_TAG = "3.2.1637.fun-be-qa"
                     } else if ("${WORK_BRANCH}" == "stage") {
                         env.APP_ENV_NAME = "uat"
                         env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-be-${APP_ENV_NAME}"
@@ -49,7 +49,6 @@ pipeline {
                      //sshagent(["${GIT_CREDS}"]) {
                      //   sh "git push git@github.com:funi-main/source2-main.git ${JGIT_TAG}"
                      //}
-                    sh 'echo ${JGIT_TAG}'
                 }
 
                 dir('code-dir') {
