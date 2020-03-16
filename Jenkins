@@ -171,7 +171,7 @@ pipeline {
                         sh '''#!/bin/bash
                         sed -i "s/BUILD_NUMBER_PLACEHOLDER/${BUILD_NUMBER}/g" src/backend/Dockerfile
                         sed -i "s/JENKINS_JOB_NAME_PLACEHOLDER/${JOB_NAME}/g" src/backend/Dockerfile
-                        // sed -i "s/GIT_TAG_PLACEHOLDER/${tagName:-Untagged}/g" src/backend/Dockerfile
+                        #sed -i "s/GIT_TAG_PLACEHOLDER/${tagName:-Untagged}/g" src/backend/Dockerfile
                         sed -i "s/GIT_BRANCH_PLACEHOLDER/${GIT_BRANCH}/g" src/backend/Dockerfile
                         '''
                     }
