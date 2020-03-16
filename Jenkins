@@ -93,7 +93,7 @@ pipeline {
                         branches: [[name: '${WORK_BRANCH}']],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [
-                            [$class: 'RelativeTargetDirectory', relativeTargetDir: 'lib/source2apps'],
+                            [$class: 'RelativeTargetDirectory', relativeTargetDir: 'lib/funimation-source'],
                             [$class: 'LocalBranch', localBranch: "**"]
                           ],
                         submoduleCfg: [],
@@ -135,6 +135,20 @@ pipeline {
                         submoduleCfg: [],
                         userRemoteConfigs: [[credentialsId: "${GIT_CREDS}",
                         url: 'git@github.com:funi-main/source2apps.git']]
+                    ])
+                }
+
+                dir('funimation-source-dir') {
+                    checkout([$class: 'GitSCM',
+                        branches: [[name: "tags/${env.JGIT_TAG}"]],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [
+                            [$class: 'RelativeTargetDirectory', relativeTargetDir: 'lib/funimation-source'],
+                            [$class: 'LocalBranch', localBranch: "**"]
+                          ],
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[credentialsId: "${GIT_CREDS}",
+                        url: 'git@github.com:funi-main/funimation-source.git']]
                     ])
                 }
             }
