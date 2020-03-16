@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        JGIT_TAG="${tagToCreate}.${BUILD_NUMBER}.fun-be-${APP_ENV_NAME}"
-    }
-
-
     stages {
         stage('Prepare ENV') {
             steps {
@@ -15,15 +10,17 @@ pipeline {
                     }
                     if ("${WORK_BRANCH}" == "dev") {
                         env.APP_ENV_NAME = "development"
+                        env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-be-${APP_ENV_NAME}"
                     } else if ("${WORK_BRANCH}" == "qa") {
                         env.APP_ENV_NAME = "qa"
+                        env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-be-${APP_ENV_NAME}"
                     } else if ("${WORK_BRANCH}" == "stage") {
                         env.APP_ENV_NAME = "uat"
+                        env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-be-${APP_ENV_NAME}"
                     } else {
                         echo "WORK_BRANCH field is missing, please check"
                         exit 1
                     }
-                    echo env.JGIT_TAG
                 }
             }
         }
