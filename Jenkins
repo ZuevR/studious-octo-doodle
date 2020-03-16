@@ -28,7 +28,7 @@ pipeline {
 
         stage('Set tags') {
             steps {
-                dir('src') {
+                dir('/') {
                     checkout([$class: 'GitSCM',
                         branches: [[name: '*/venue']],
                         doGenerateSubmoduleConfigurations: false,
@@ -88,7 +88,7 @@ pipeline {
                     //}
                 }
 
-                dir('funimation-source-dir') {
+
                     checkout([$class: 'GitSCM',
                         branches: [[name: '${WORK_BRANCH}']],
                         doGenerateSubmoduleConfigurations: false,
@@ -104,7 +104,7 @@ pipeline {
                     //sshagent(["${GIT_CREDS}"]) {
                     //   sh "git@github.com:funi-main/funimation-source.git ${JGIT_TAG}"
                     //}
-                }
+
             }
         }
 
@@ -169,7 +169,6 @@ pipeline {
                 timestamps {
                     ansiColor('xterm') {
                         sh '''#!/bin/bash
-                        echo env.JGIT_TAG
                         sed -i "s/BUILD_NUMBER_PLACEHOLDER/${BUILD_NUMBER}/g" src/backend/Dockerfile
                         sed -i "s/JENKINS_JOB_NAME_PLACEHOLDER/${JOB_NAME}/g" src/backend/Dockerfile
                         sed -i "s/GIT_TAG_PLACEHOLDER/${JGIT_TAG:-Untagged}/g" src/backend/Dockerfile
