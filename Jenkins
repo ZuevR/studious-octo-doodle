@@ -49,11 +49,12 @@ pipeline {
                      //sshagent(["${GIT_CREDS}"]) {
                      //   sh "git push git@github.com:funi-main/source2-main.git ${JGIT_TAG}"
                      //}
+                    sh 'echo ${JGIT_TAG}'
                 }
 
                 dir('code-dir') {
                     checkout([$class: 'GitSCM',
-                        branches: [[name: 'tags/3.2.1637.fun-be-qa']],
+                        branches: [[name: 'tags/${JGIT_TAG}']],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [
                             [$class: 'RelativeTargetDirectory', relativeTargetDir: 'lib/code'],
