@@ -151,6 +151,20 @@ pipeline {
                         url: 'git@github.com:funi-main/funimation-source.git']]
                     ])
                 }
+
+                dir('geoip') {
+                    checkout([$class: 'GitSCM',
+                        branches: [[name: '*/master']],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [
+                            [$class: 'RelativeTargetDirectory', relativeTargetDir: 'geoip'],
+                            [$class: 'LocalBranch', localBranch: "**"]
+                          ],
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[credentialsId: "${GIT_CREDS}",
+                        url: 'git@github.com:maxmind/geoipupdate.git']]
+                    ])
+                }
             }
         }
     }
