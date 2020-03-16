@@ -23,6 +23,7 @@ pipeline {
                         echo "WORK_BRANCH field is missing, please check"
                         exit 1
                     }
+                    echo env.JGIT_TAG
                 }
             }
         }
