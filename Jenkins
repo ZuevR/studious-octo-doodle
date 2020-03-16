@@ -53,7 +53,7 @@ pipeline {
 
                 dir('code-dir') {
                     checkout([$class: 'GitSCM',
-                        branches: [[name: 'tags/${JGIT_TAG}']],
+                        branches: [[name: 'tags/3.2.1637.fun-be-qa']],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [
                             [$class: 'RelativeTargetDirectory', relativeTargetDir: 'lib/code'],
