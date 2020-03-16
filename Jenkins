@@ -27,21 +27,24 @@ pipeline {
             }
         }
 
-        stage('set tags') {
+        stage('Set tags') {
             steps {
-
                 dir('src') {
                     checkout([$class: 'GitSCM',
                         branches: [[name: '*/venue']],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [
-                          [
-                            $class: 'SparseCheckoutPaths',
-                            sparseCheckoutPaths: [
-                              [ $class: 'SparseCheckoutPath', path: 'backend/' ]]
+                            [
+                                $class: 'SparseCheckoutPaths',
+                                sparseCheckoutPaths: [
+                                    [
+                                        $class: 'SparseCheckoutPath',
+                                        sparseCheckoutPaths: [[path: 'backend'], [path: 'maintenance']]
+                                    ]
+                                ]
                             ],
                             [$class: 'LocalBranch', localBranch: "**"]
-                          ],
+                        ],
                         submoduleCfg: [],
                         userRemoteConfigs: [[credentialsId: "${GIT_CREDS}",
                         url: 'git@github.com:funi-main/source2-main.git']]
@@ -65,6 +68,9 @@ pipeline {
                         url: 'git@github.com:funi-main/source-2.git']]
                     ])
                     sh 'git tag -a -f ${JGIT_TAG} -m "Jenkins build tag"'
+                    //sshagent(["${GIT_CREDS}"]) {
+                    //   sh "git push git@github.com:funi-main/source-2.git ${JGIT_TAG}"
+                    //}
                 }
 
                 dir('source-dir') {
@@ -80,6 +86,9 @@ pipeline {
                         url: 'git@github.com:funi-main/source2apps.git']]
                     ])
                     sh 'git tag -a -f ${JGIT_TAG} -m "Jenkins build tag"'
+                    //sshagent(["${GIT_CREDS}"]) {
+                    //   sh "git@github.com:funi-main/source2apps.git ${JGIT_TAG}"
+                    //}
                 }
 
                 dir('funimation-source-dir') {
@@ -95,6 +104,9 @@ pipeline {
                         url: 'git@github.com:funi-main/funimation-source.git']]
                     ])
                     sh 'git tag -a -f ${JGIT_TAG} -m "Jenkins build tag"'
+                    //sshagent(["${GIT_CREDS}"]) {
+                    //   sh "git@github.com:funi-main/funimation-source.git ${JGIT_TAG}"
+                    //}
                 }
             }
         }
