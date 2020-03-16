@@ -174,7 +174,7 @@ pipeline {
 
                         cp local_settings_client.py lib/code/source/source_client/local_settings.py
 
-                        sed -i "s/.*FROM.*/FROM 933909558080.dkr.ecr.us-west-2.amazonaws.com\/source2base-${APP_ENV_NAME}:latest/" Dockerfile
+                        sed -i "s/.*FROM.*/FROM 933909558080.dkr.ecr.us-west-2.amazonaws.com\\/source2base-${APP_ENV_NAME}:latest/" Dockerfile
 
                         if [ $APP_ENV_NAME == "qa" ]
                         then
