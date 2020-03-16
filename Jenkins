@@ -28,7 +28,7 @@ pipeline {
 
         stage('Set tags') {
             steps {
-                dir('/') {
+                dir('src') {
                     checkout([$class: 'GitSCM',
                         branches: [[name: '*/venue']],
                         doGenerateSubmoduleConfigurations: false,
