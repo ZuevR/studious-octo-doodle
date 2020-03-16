@@ -37,10 +37,8 @@ pipeline {
                             [
                                 $class: 'SparseCheckoutPaths',
                                 sparseCheckoutPaths: [
-                                    [
-                                        $class: 'SparseCheckoutPath',
-                                        sparseCheckoutPaths: [[path: 'backend/']]
-                                    ]
+                                    [ $class: 'SparseCheckoutPath', path: 'backend/' ],
+                                    [ $class: 'SparseCheckoutPath', path: 'maintenance/' ],
                                 ]
                             ],
                             [$class: 'LocalBranch', localBranch: "**"]
