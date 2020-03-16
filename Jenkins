@@ -28,7 +28,7 @@ pipeline {
 
         stage('Set tags') {
             steps {
-                dir('src') {
+
                     checkout([$class: 'GitSCM',
                         branches: [[name: '*/venue']],
                         doGenerateSubmoduleConfigurations: false,
@@ -50,9 +50,9 @@ pipeline {
                      //sshagent(["${GIT_CREDS}"]) {
                      //   sh "git push git@github.com:funi-main/source2-main.git ${JGIT_TAG}"
                      //}
-                }
 
-                dir('code-dir') {
+
+
                     checkout([$class: 'GitSCM',
                         branches: [[name: '*/${WORK_BRANCH}']],
                         doGenerateSubmoduleConfigurations: false,
@@ -68,7 +68,7 @@ pipeline {
                     //sshagent(["${GIT_CREDS}"]) {
                     //   sh "git push git@github.com:funi-main/source-2.git ${JGIT_TAG}"
                     //}
-                }
+
 
                 dir('source-dir') {
                     checkout([$class: 'GitSCM',
