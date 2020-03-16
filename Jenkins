@@ -123,6 +123,20 @@ pipeline {
                         url: 'git@github.com:funi-main/source-2.git']]
                     ])
                 }
+
+                dir('source-dir') {
+                    checkout([$class: 'GitSCM',
+                        branches: [[name: "tags/${env.JGIT_TAG}"]],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [
+                            [$class: 'RelativeTargetDirectory', relativeTargetDir: 'lib/source2apps'],
+                            [$class: 'LocalBranch', localBranch: "**"]
+                          ],
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[credentialsId: "${GIT_CREDS}",
+                        url: 'git@github.com:funi-main/source2apps.git']]
+                    ])
+                }
             }
         }
     }
