@@ -13,6 +13,7 @@ pipeline {
                         env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-be-${APP_ENV_NAME}"
                     } else if ("${WORK_BRANCH}" == "qa") {
                         env.APP_ENV_NAME = "qa"
+                        // this test data
                         env.JGIT_TAG = "3.2.1637.fun-be-qa"
                     } else if ("${WORK_BRANCH}" == "stage") {
                         env.APP_ENV_NAME = "uat"
@@ -53,7 +54,7 @@ pipeline {
 
                 dir('code-dir') {
                     checkout([$class: 'GitSCM',
-                        branches: [[name: "tags/${env.JGIT_TAG}"]],
+                        branches: [[name: '*/${WORK_BRANCH}']],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [
                             [$class: 'RelativeTargetDirectory', relativeTargetDir: 'lib/code'],
@@ -103,6 +104,24 @@ pipeline {
                     //sshagent(["${GIT_CREDS}"]) {
                     //   sh "git@github.com:funi-main/funimation-source.git ${JGIT_TAG}"
                     //}
+                }
+            }
+        }
+
+        stage('Venue Migrations') {
+            steps{
+                dir('code-dir') {
+                    checkout([$class: 'GitSCM',
+                        branches: [[name: "tags/${env.JGIT_TAG}"]],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [
+                            [$class: 'RelativeTargetDirectory', relativeTargetDir: 'lib/code'],
+                            [$class: 'LocalBranch', localBranch: "**"]
+                          ],
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[credentialsId: "${GIT_CREDS}",
+                        url: 'git@github.com:funi-main/source-2.git']]
+                    ])
                 }
             }
         }
