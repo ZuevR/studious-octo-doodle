@@ -39,7 +39,7 @@ pipeline {
                                 sparseCheckoutPaths: [
                                     [
                                         $class: 'SparseCheckoutPath',
-                                        sparseCheckoutPaths: [[path: 'backend'], [path: 'maintenance']]
+                                        sparseCheckoutPaths: [[path: 'backend/'], [path: 'maintenance/']]
                                     ]
                                 ]
                             ],
