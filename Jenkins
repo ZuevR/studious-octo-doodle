@@ -238,9 +238,9 @@ pipeline {
                     } catch (e) {
                       if (autoCancelled) {
                         currentBuild.result = 'ABORTED'
-                        echo('Skipping mail notification')
+
                         // return here instead of throwing error to keep the build "green"
-                        return
+                        sh 'exit 0'
                       }
                       // normal error handling
                       throw e
