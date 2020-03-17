@@ -23,7 +23,9 @@ pipeline {
                         exit 1
                     }
                     //echo params
-                    //echo params.ECR_URL
+                    echo params.ECR_URL
+                    echo '/////'
+                    echo ECR_URL
                     env.DOCKER_BASE = "1"
                     echo DOCKER_BASE
                 }
