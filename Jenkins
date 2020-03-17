@@ -24,7 +24,8 @@ pipeline {
                     }
                     //echo params
                     //echo params.ECR_URL
-                    //env.DOCKER_BASE = "${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}-migration"
+                    env.DOCKER_BASE = "1"
+                    echo DOCKER_BASE
                 }
             }
         }
