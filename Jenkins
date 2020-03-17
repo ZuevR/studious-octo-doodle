@@ -224,7 +224,7 @@ pipeline {
                   stage('checkout') {
                     if (RUN_MIGRATIONS != 'yes') {
                         currentBuild.result = 'ABORTED'
-                        sh 'exit 0'
+                        sh 'exit 1'
                         return
                     }
                   }
