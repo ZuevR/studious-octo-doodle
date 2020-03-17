@@ -294,10 +294,19 @@ pipeline {
                     fi
                 }
 
+                exitjob() {
+                echo "The job will not run any migration due to the fact that it was not selected"
+                    exit 0
+                }
 
                 if [ "${RUN_MIGRATIONS}" == "yes" ];then
                 echo $RUN_MIGRATIONS
                 runmigration
+
+                elif [ "${RUN_MIGRATIONS}" == "no" ];then
+                exitjob
+
+                fi
                 '''
             }
         }
