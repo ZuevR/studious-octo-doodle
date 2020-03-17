@@ -22,7 +22,8 @@ pipeline {
                         echo "WORK_BRANCH field is missing, please check"
                         exit 1
                     }
-                    env.DOCKER_BASE = "${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}-migration"
+                    env.DOCKER_BASE_COND = "${ECR_URL}/source2base-${APP_ENV_NAME}"
+                    env.DOCKER_BUILD_MIGRATION = "${ECR_URL}/venue-be-${APP_ENV_NAME}"
                 }
             }
         }
@@ -194,17 +195,33 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
+        stage('Docker Build Cond') {
             when {
                 expression { params.BUILD_TYPE == 'Full' }
             }
             steps {
                 sh '''#!/bin/bash
                 docker build \
-                --cache-from ${DOCKER_BASE} \
-                -t ${DOCKER_BASE}:latest \
-                -t ${DOCKER_BASE}:${JGIT_TAG} \
+                --cache-from ${DOCKER_BASE_COND} \
+                -t ${DOCKER_BASE_COND}:latest \
+                -t ${DOCKER_BASE_COND}:${JGIT_TAG} \
                 -f Dockerfile .
+                #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:latest
+                #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:${JGIT_TAG}
+                '''
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                sh '''#!/bin/bash
+                docker build \
+                --build-arg KANE_BASE=${DOCKER_BASE} \
+                -t ${DOCKER_BUILD_MIGRATION}:latest \
+                -t ${DOCKER_BUILD_MIGRATION}:${JGIT_TAG}-migration \
+                -f Dockerfile .
+                #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV}:latest
+                #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV}:${JGIT_TAG}-migration
                 '''
             }
         }
