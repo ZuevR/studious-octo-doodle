@@ -201,12 +201,12 @@ pipeline {
 
                         sed -i "s/.*FROM.*/FROM 933909558080.dkr.ecr.us-west-2.amazonaws.com\\/source2base-${APP_ENV_NAME}:latest/" Dockerfile
 
-                        if [ $APP_ENV_NAME == "qa" ]
+                        if [ $APP_ENV_NAME = "qa" ]
                         then
                         echo "ADD 0002_auto_20180629_1711.config /usr/local/lib/python2.7/dist-packages/social/apps/django_app/default/migrations/0002_auto_20180629_1711.py" >> Dockerfile
                         fi
 
-                        if [ $APP_ENV_NAME == "uat" ]
+                        if [ $APP_ENV_NAME = "uat" ]
                         then
                         echo "ADD 0002_auto_20180629_1711.config /usr/local/lib/python2.7/dist-packages/social/apps/django_app/default/migrations/0002_auto_20180725_2123.py" >> Dockerfile
                         fi
@@ -300,7 +300,7 @@ pipeline {
                     exit 0
                 }
 
-                if [ "${RUN_MIGRATIONS}" == 'yes' ];then
+                if [ "${RUN_MIGRATIONS}" = "yes" ];then
                 echo $RUN_MIGRATIONS
                 runmigration
 
