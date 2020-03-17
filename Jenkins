@@ -223,7 +223,7 @@ pipeline {
                 script {
                     if (RUN_MIGRATIONS != 'yes') {
                         currentBuild.result = 'ABORTED'
-                        sh 'exit 1'
+                        throw new Error('suk')
                     }
                 }
             }
