@@ -218,14 +218,15 @@ pipeline {
             }
         }
 
-        stage('Abort condition') {
+        node('Abort condition') {
             when {
                 expression { params.RUN_MIGRATIONS != 'yes' }
             }
 
             steps {
                 script {
-                    currentBuild.rawBuild.result = 'ABORTED'
+                    currentBuild.result = 'ABORTED'
+
                     return
                 }
             }
