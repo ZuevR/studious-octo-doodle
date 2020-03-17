@@ -221,6 +221,9 @@ pipeline {
         stage('asd') {
             steps {
                 sh "curl -X POST http://localhost:8080/job/Main%20pipeline/${BUILD_NUMBER}/stop"
+
+                sh 'echo 2'
+
             }
         }
 
