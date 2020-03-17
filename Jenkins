@@ -220,10 +220,7 @@ pipeline {
 
         stage('asd') {
             steps {
-                script {
-                    currentBuild.getRawBuild().getExecutor().interrupt(Result.SUCCESS)
-                    sleep(1)   // Interrupt is not blocking and does not take effect immediately.
-                }
+                sh "curl -X POST http://localhost:8080/job/${JOB_NAME}/${BUILD_NUMBER}/stop"
             }
         }
 
