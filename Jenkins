@@ -203,7 +203,7 @@ pipeline {
                 docker build \
                 --cache-from ${DOCKER_BASE} \
                 -t ${DOCKER_BASE}:latest \
-                -t ${DOCKER_BASE}:${JGIT_TAG}
+                -t ${DOCKER_BASE}:${JGIT_TAG} \
                 -f Dockerfile .
                 '''
             }
