@@ -259,7 +259,7 @@ pipeline {
         stage('Just shell') {
             steps {
                 sh ''' #!/bin/bash
-                docker pull 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${tagName}-migration > /dev/null
+                docker pull 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:3.2.1637.fun-be-qa-migration > /dev/null
                 '''
             }
         }
