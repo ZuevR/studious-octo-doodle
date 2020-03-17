@@ -22,6 +22,7 @@ pipeline {
                         echo "WORK_BRANCH field is missing, please check"
                         exit 1
                     }
+                    env.DOCKER_BASE = "${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}-migration"
                 }
             }
         }
@@ -198,7 +199,12 @@ pipeline {
                 expression { params.BUILD_TYPE == 'Full' }
             }
             steps {
-                echo "Hello, bitwiseman!"
+                sh '''#!/bin/bash
+                docker build \
+                --cache-from ${DOCKER_BASE} \
+                -t ${DOCKER_BASE} \
+                -f Dockerfile .
+                '''
             }
         }
     }
