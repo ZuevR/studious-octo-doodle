@@ -225,7 +225,6 @@ pipeline {
                     if (RUN_MIGRATIONS != 'yes') {
                         currentBuild.result = 'ABORTED'
                         sh 'exit 1'
-                        return
                     }
                   }
                 }
