@@ -22,9 +22,9 @@ pipeline {
                         echo "WORK_BRANCH field is missing, please check"
                         exit 1
                     }
-                    echo params
-                    echo params.ECR_URL
-                    env.DOCKER_BASE = "${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}-migration"
+                    //echo params
+                    //echo params.ECR_URL
+                    //env.DOCKER_BASE = "${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}-migration"
                 }
             }
         }
@@ -202,10 +202,10 @@ pipeline {
             }
             steps {
                 sh '''#!/bin/bash
-                docker build \
-                --cache-from ${DOCKER_BASE} \
-                -t ${DOCKER_BASE} \
-                -f Dockerfile .
+                #docker build \
+                #--cache-from ${DOCKER_BASE} \
+                #-t ${DOCKER_BASE} \
+                #-f Dockerfile .
                 '''
             }
         }
