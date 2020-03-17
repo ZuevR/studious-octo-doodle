@@ -259,12 +259,10 @@ pipeline {
         stage('Just shell') {
             steps {
                 sh ''' #!/bin/bash
-                #docker pull 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:3.2.1637.fun-be-qa-migration > /dev/null
 
 
                 runmigration() {
-                    if [ $APP_ENV_NAME = "development" ]
-                    then
+                    if [ $APP_ENV_NAME = "development" ];then
                     docker run --rm -e APP_ENV="DEV" -e DBUSER="postgres" -e DBPASSWORD="postgressecret" \
                     933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration \
                     bash  -c 'cd /code/source && \
@@ -273,8 +271,7 @@ pipeline {
                     ./manage.py migrate --noinput'
                     fi
 
-                    if [ $APP_ENV_NAME = "qa" ]
-                    then
+                    if [ $APP_ENV_NAME = "qa" ];then
                     echo '1111'
                     docker run --rm -e APP_ENV="QA" -e DBUSER="postgres" -e DBPASSWORD="postgressecret" \
                     933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration \
@@ -284,8 +281,7 @@ pipeline {
                     ./manage.py migrate --noinput'
                     fi
 
-                    if [ $APP_ENV_NAME = "uat" ]
-                    then
+                    if [ $APP_ENV_NAME = "uat" ];then
                     docker run --rm -e APP_ENV="UAT" -e DBUSER="postgres" -e DBPASSWORD="2fNX1}[OQm1D" \
                     933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration \
                     bash -c 'cd /code/source && \
@@ -304,7 +300,7 @@ pipeline {
                 echo $RUN_MIGRATIONS
                 runmigration
 
-                elif [ "${RUN_MIGRATIONS}" == "no" ];then
+                elif [ "${RUN_MIGRATIONS}" = "no" ];then
                 exitjob
 
                 fi
