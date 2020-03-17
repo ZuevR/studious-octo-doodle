@@ -225,7 +225,7 @@ pipeline {
 
                     try {
                       stage('checkout') {
-                        if (${RUN_MIGRATIONS} != 'yes') {
+                        if (RUN_MIGRATIONS != 'yes') {
                           autoCancelled = true
                           return
                         }
