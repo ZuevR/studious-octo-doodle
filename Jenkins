@@ -192,5 +192,14 @@ pipeline {
                 }
             }
         }
+
+        stage('Docker Build') {
+            when {
+                expression { params.BUILD_TYPE == 'Full' }
+            }
+            steps {
+                echo "Hello, bitwiseman!"
+            }
+        }
     }
 }
