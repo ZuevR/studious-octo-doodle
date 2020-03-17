@@ -221,12 +221,30 @@ pipeline {
         stage('asd') {
             steps {
                 script {
-                  stage('checkout') {
-                    if (RUN_MIGRATIONS != 'yes') {
+                    def autoCancelled = false
+
+                    try {
+                      stage('checkout') {
+                        if (RUN_MIGRATIONS != 'yes') {
+                          autoCancelled = true
+                          return
+                        }
+                      }
+                      if (autoCancelled) {
+                        error('Aborting the build to prevent a loop.')
+                        // return would be also possible but you have to be sure to quit all stages and wrapper properly
+                        // return
+                      }
+                    } catch (e) {
+                      if (autoCancelled) {
                         currentBuild.result = 'ABORTED'
-                        sh 'exit 1'
+
+                        // return here instead of throwing error to keep the build "green"
+                        sh 'exit 0'
+                      }
+                      // normal error handling
+                      throw e
                     }
-                  }
                 }
             }
         }
