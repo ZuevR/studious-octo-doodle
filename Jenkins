@@ -1,6 +1,13 @@
 pipeline {
     agent any
 
+   if(params.RUN_MIGRATIONS != 'yes') {
+        currentBuild.result = 'ABORTED'
+        echo 'asd'
+        echo currentBuild.result
+        return
+   }
+
     stages {
         stage('Prepare ENV') {
             steps {
@@ -217,14 +224,6 @@ pipeline {
                 }
             }
         }
-
-
-           if(params.RUN_MIGRATIONS != 'yes') {
-                currentBuild.result = 'ABORTED'
-                echo 'asd'
-                echo currentBuild.result
-                return
-           }
 
 
 
