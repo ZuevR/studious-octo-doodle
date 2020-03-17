@@ -218,7 +218,7 @@ pipeline {
             }
         }
 
-        stage('Docker Build Cond') {
+        /* stage('Docker Build Cond') {
             when {
                 expression { params.BUILD_TYPE == 'Full' }
             }
@@ -252,6 +252,14 @@ pipeline {
                 -f Dockerfile .
                 #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV}:latest
                 #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV}:${JGIT_TAG}-migration
+                '''
+            }
+        } */
+
+        stage('Just shell') {
+            steps {
+                sh ''' #!/bin/bash
+                docker pull 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${tagName}-migration > /dev/null
                 '''
             }
         }
