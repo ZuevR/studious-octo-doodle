@@ -106,7 +106,7 @@ pipeline {
         }
 
         stage('Venue Migrations') {
-            steps{
+            steps {
                 checkout([$class: 'GitSCM',
                     branches: [[name: "tags/${env.JGIT_TAG}"]],
                     doGenerateSubmoduleConfigurations: false,
@@ -162,7 +162,24 @@ pipeline {
                         sed -i "s/JENKINS_JOB_NAME_PLACEHOLDER/${JOB_NAME}/g" src/backend/Dockerfile
                         sed -i "s/GIT_TAG_PLACEHOLDER/${JGIT_TAG:-Untagged}/g" src/backend/Dockerfile
                         sed -i "s/GIT_BRANCH_PLACEHOLDER/${WORK_BRANCH}/g" src/backend/Dockerfile
+                    }
+                }
 
+                script {
+                    echo "${JOB_NAME} - Tag: $tagName Branch: $GIT_BRANCH BuildNum: $BUILD_NUMBER - STARTED"
+                }
+
+                //step([
+                //    $class: 'DsbNotificationBuilder',
+                //    extensions: [
+                //        [$class: 'ProfileNotifier', message: 'f', name: 'GS Venue DSB']
+                //    ]
+                //])
+
+
+                timestamps {
+                    ansiColor('xterm') {
+                        sh '''#!/bin/bash
                         mv src/backend/* ./ && rm -rf src/backend
                         rm -rf lib/code/source/apps
                         rm -rf lib/code/source/source_client
@@ -195,35 +212,6 @@ pipeline {
             }
         }
 
-        stage('Docker Build Cond') {
-            when {
-                expression { params.BUILD_TYPE == 'Full' }
-            }
-            steps {
-                sh '''#!/bin/bash
-                docker build \
-                --cache-from ${DOCKER_BASE_COND} \
-                -t ${DOCKER_BASE_COND}:latest \
-                -t ${DOCKER_BASE_COND}:${JGIT_TAG} \
-                -f Dockerfile .
-                #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:latest
-                #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:${JGIT_TAG}
-                '''
-            }
-        }
 
-        stage('Docker Build') {
-            steps {
-                sh '''#!/bin/bash
-                docker build \
-                --build-arg KANE_BASE=${DOCKER_BASE} \
-                -t ${DOCKER_BUILD_MIGRATION}:latest \
-                -t ${DOCKER_BUILD_MIGRATION}:${JGIT_TAG}-migration \
-                -f Dockerfile .
-                #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV}:latest
-                #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV}:${JGIT_TAG}-migration
-                '''
-            }
-        }
     }
 }
