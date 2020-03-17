@@ -167,7 +167,7 @@ pipeline {
                 }
 
                 script {
-                    echo "${JOB_NAME} - Tag: $tagName Branch: $GIT_BRANCH BuildNum: $BUILD_NUMBER - STARTED"
+                    echo "${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${GIT_BRANCH} BuildNum: ${BUILD_NUMBER} - STARTED"
                 }
 
                 //step([
