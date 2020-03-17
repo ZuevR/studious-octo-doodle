@@ -179,7 +179,7 @@ pipeline {
 
                 timestamps {
                     ansiColor('xterm') {
-                        sh '''#!/bin/bash
+                        sh ''' #!/bin/bash
                         mv src/backend/* ./ && rm -rf src/backend
                         rm -rf lib/code/source/apps
                         rm -rf lib/code/source/source_client
