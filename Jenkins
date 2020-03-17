@@ -169,10 +169,15 @@ pipeline {
                     echo "${JOB_NAME} - Tag: $tagName Branch: $GIT_BRANCH BuildNum: $BUILD_NUMBER - STARTED"
                 }
 
+                // think should work
                 //step([
                 //    $class: 'DsbNotificationBuilder',
                 //    extensions: [
-                //        [$class: 'ProfileNotifier', message: 'f', name: 'GS Venue DSB']
+                //        [
+                //            $class: 'ProfileNotifier',
+                //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - STARTED",
+                //            name: 'GS Venue DSB'
+                //        ]
                 //    ]
                 //])
 
@@ -212,6 +217,35 @@ pipeline {
             }
         }
 
+        stage('Docker Build Cond') {
+            when {
+                expression { params.BUILD_TYPE == 'Full' }
+            }
+            steps {
+                sh '''#!/bin/bash
+                docker build \
+                --cache-from ${DOCKER_BASE_COND} \
+                -t ${DOCKER_BASE_COND}:latest \
+                -t ${DOCKER_BASE_COND}:${JGIT_TAG} \
+                -f Dockerfile .
+                #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:latest
+                #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:${JGIT_TAG}
+                '''
+            }
+        }
 
+        stage('Docker Build') {
+            steps {
+                sh '''#!/bin/bash
+                docker build \
+                --build-arg KANE_BASE=${DOCKER_BASE} \
+                -t ${DOCKER_BUILD_MIGRATION}:latest \
+                -t ${DOCKER_BUILD_MIGRATION}:${JGIT_TAG}-migration \
+                -f Dockerfile .
+                #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV}:latest
+                #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV}:${JGIT_TAG}-migration
+                '''
+            }
+        }
     }
 }
