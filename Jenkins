@@ -218,14 +218,14 @@ pipeline {
             }
         }
 
-        stage('Test') {
+
            if(params.RUN_MIGRATIONS != 'yes') {
                 currentBuild.result = 'ABORTED'
                 echo 'asd'
                 echo currentBuild.result
                 return
            }
-        }
+
 
 
         /* stage('Docker Build Cond') {
