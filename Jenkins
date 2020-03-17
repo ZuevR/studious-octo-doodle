@@ -218,7 +218,7 @@ pipeline {
             }
         }
 
-        stage('Docker Build Cond') {
+        /* stage('Docker Build Cond') {
             when {
                 expression { params.BUILD_TYPE == 'Full' }
             }
@@ -247,6 +247,6 @@ pipeline {
                 #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV}:${JGIT_TAG}-migration
                 '''
             }
-        }
+        } */
     }
 }
