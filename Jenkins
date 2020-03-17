@@ -252,7 +252,7 @@ pipeline {
         stage('not') {
             steps {
                 script {
-                    echo 1
+                    echo '1'
                 }
             }
         }
