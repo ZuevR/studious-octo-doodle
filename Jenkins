@@ -285,7 +285,7 @@ pipeline {
 
                     if [ $APP_ENV_NAME = "uat" ]
                     then
-                    docker run --rm -e APP_ENV="UAT" -e DBUSER="postgres" -e DBPASSWORD="2fNX1}[OQm1D" \
+                    docker run --rm -e APP_ENV="UAT" -e DBUSER="postgres" -e DBPASSWORD="2fNX1[OQm1D" \
                     933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration \
                     bash -c 'cd /code/source && \
                     sed -i "s~DBUSER~DBROOTUSER~g" /code/source/source/local_settings.py && \
