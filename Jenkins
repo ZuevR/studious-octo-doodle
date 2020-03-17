@@ -226,6 +226,7 @@ pipeline {
             steps {
                 script {
                     currentBuild.result = 'ABORTED'
+                    exit 0
                     return
                 }
             }
