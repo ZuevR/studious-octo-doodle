@@ -219,16 +219,12 @@ pipeline {
         }
 
         stage('Test') {
-            when {
-                expression { params.RUN_MIGRATIONS != 'yes' }
-            }
-
-            steps {
+           if(params.RUN_MIGRATIONS != 'yes') {
                 currentBuild.result = 'ABORTED'
                 echo 'asd'
                 echo currentBuild.result
                 return
-            }
+           }
         }
 
 
