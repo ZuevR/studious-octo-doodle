@@ -249,6 +249,14 @@ pipeline {
             }
         }
 
+        stage('not') {
+            steps {
+                script {
+                    echo 1
+                }
+            }
+        }
+
 
 
         /* stage('Docker Build Cond') {
