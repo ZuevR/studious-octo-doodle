@@ -218,24 +218,29 @@ pipeline {
             }
         }
 
-        node('Abort condition') {
-            when {
-                expression { params.RUN_MIGRATIONS != 'yes' }
-            }
+        def autoCancelled = false
 
-            steps {
-                script {
-                    currentBuild.result = 'ABORTED'
-
-                    return
-                }
+        try {
+          stage('checkout') {
+            if (${RUN_MIGRATIONS} != 'yes') {
+              autoCancelled = true
+              return
             }
-        }
-
-        stage('Test') {
-            steps {
-                sh 'echo 1'
-            }
+          }
+          if (autoCancelled) {
+            error('Aborting the build to prevent a loop.')
+            // return would be also possible but you have to be sure to quit all stages and wrapper properly
+            // return
+          }
+        } catch (e) {
+          if (autoCancelled) {
+            currentBuild.result = 'ABORTED'
+            echo('Skipping mail notification')
+            // return here instead of throwing error to keep the build "green"
+            return
+          }
+          // normal error handling
+          throw e
         }
 
 
