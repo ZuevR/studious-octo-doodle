@@ -218,6 +218,19 @@ pipeline {
             }
         }
 
+        stage('Test') {
+            when {
+                expression { params.RUN_MIGRATIONS != 'yes' }
+            }
+
+            steps {
+                currentBuild.result = 'ABORTED'
+                echo 'asd'
+                echo currentBuild.result
+            }
+        }
+
+
         /* stage('Docker Build Cond') {
             when {
                 expression { params.BUILD_TYPE == 'Full' }
