@@ -227,6 +227,7 @@ pipeline {
                 currentBuild.result = 'ABORTED'
                 echo 'asd'
                 echo currentBuild.result
+                return
             }
         }
 
