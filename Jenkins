@@ -162,6 +162,7 @@ pipeline {
                         sed -i "s/JENKINS_JOB_NAME_PLACEHOLDER/${JOB_NAME}/g" src/backend/Dockerfile
                         sed -i "s/GIT_TAG_PLACEHOLDER/${JGIT_TAG:-Untagged}/g" src/backend/Dockerfile
                         sed -i "s/GIT_BRANCH_PLACEHOLDER/${WORK_BRANCH}/g" src/backend/Dockerfile
+                        '''
                     }
                 }
 
