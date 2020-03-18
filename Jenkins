@@ -220,6 +220,10 @@ pipeline {
                   sh ''' #!/bin/bash
                     pwd
                     echo 1 > shared.txt
+                    echo "$WORKSPACE"
+                    echo $WORKSPACE
+
+                    #cp /var/lib/jenkins/jobs/Main\ pipeline/workspace
                   '''
                 }
             }
