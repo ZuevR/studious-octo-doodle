@@ -214,6 +214,17 @@ pipeline {
             }
         }
 
+        stage('Workspace example') {
+            steps {
+                ws('Example') {
+                  sh ''' #!/bin/bash
+                    pwd
+                    echo 1 > shared.txt
+                  '''
+                }
+            }
+        }
+
         /* stage('Docker source2base Build') {
             when {
                 expression { params.BUILD_TYPE == 'Full' }
