@@ -218,6 +218,44 @@ pipeline {
                         }
                     }
                 }
+
+                stage('Docker source2base Build') {
+                    when {
+                        expression { params.BUILD_TYPE == 'Full' }
+                    }
+                    steps {
+                        sh '''#!/bin/bash
+                        docker build \
+                        --cache-from ${DOCKER_BASE_COND} \
+                        -t ${DOCKER_BASE_COND}:latest \
+                        -t ${DOCKER_BASE_COND}:${JGIT_TAG} \
+                        -f Dockerfile .
+                        #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:latest
+                        #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:${JGIT_TAG}
+                        '''
+
+                        script {
+                            if (RUN_MIGRATIONS != 'yes') {
+                                currentBuild.result = 'ABORTED'
+                                error('Aborting the build.')
+                            }
+                        }
+                    }
+                }
+
+                stage('Docker Migration Build') {
+                    steps {
+                        sh '''#!/bin/bash
+                        docker build \
+                        --build-arg KANE_BASE=${DOCKER_BASE} \
+                        -t ${DOCKER_BUILD_MIGRATION}:latest \
+                        -t ${DOCKER_BUILD_MIGRATION}:${JGIT_TAG}-migration \
+                        -f Dockerfile .
+                        #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:latest
+                        #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:${JGIT_TAG}-migration
+                        '''
+                    }
+                }
             }
         }
 
@@ -236,44 +274,6 @@ pipeline {
                 }
             }
         }
-
-        /* stage('Docker source2base Build') {
-            when {
-                expression { params.BUILD_TYPE == 'Full' }
-            }
-            steps {
-                sh '''#!/bin/bash
-                docker build \
-                --cache-from ${DOCKER_BASE_COND} \
-                -t ${DOCKER_BASE_COND}:latest \
-                -t ${DOCKER_BASE_COND}:${JGIT_TAG} \
-                -f Dockerfile .
-                #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:latest
-                #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:${JGIT_TAG}
-                '''
-
-                script {
-                    if (RUN_MIGRATIONS != 'yes') {
-                        currentBuild.result = 'ABORTED'
-                        error('Aborting the build.')
-                    }
-                }
-            }
-        }
-
-        stage('Docker Migration Build') {
-            steps {
-                sh '''#!/bin/bash
-                docker build \
-                --build-arg KANE_BASE=${DOCKER_BASE} \
-                -t ${DOCKER_BUILD_MIGRATION}:latest \
-                -t ${DOCKER_BUILD_MIGRATION}:${JGIT_TAG}-migration \
-                -f Dockerfile .
-                #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:latest
-                #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:${JGIT_TAG}-migration
-                '''
-            }
-        } */
 
         /* stage('Just shell') {
             steps {
