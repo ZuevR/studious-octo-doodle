@@ -220,7 +220,12 @@ pipeline {
 
                     script {
                         if (params.BUILD_TYPE == "Full") {
-                            echo '1234567890'
+                           docker build \
+                           --cache-from ${DOCKER_BASE_COND} \
+                           -t ${DOCKER_BASE_COND}:latest \
+                           -t ${DOCKER_BASE_COND}:${JGIT_TAG} \
+                           -f Dockerfile .
+
                         } else {
                             echo '0987654321'
                         }
