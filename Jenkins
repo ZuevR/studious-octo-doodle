@@ -216,13 +216,15 @@ pipeline {
 
         stage('Workspace example') {
             parallel {
-                steps {
-                    ws('Example') {
-                      sh ''' #!/bin/bash
-                        pwd
-                        echo $WORKSPACE
-                        cp -r /var/lib/jenkins/jobs/Main\\ pipeline/workspace/* $WORKSPACE
-                      '''
+                stage('idk') {
+                    steps {
+                        ws('Example') {
+                          sh ''' #!/bin/bash
+                            pwd
+                            echo $WORKSPACE
+                            cp -r /var/lib/jenkins/jobs/Main\\ pipeline/workspace/* $WORKSPACE
+                          '''
+                        }
                     }
                 }
             }
