@@ -171,7 +171,7 @@ pipeline {
         stage('Migration') {
             steps {
                 ws('migration-workspace') {
-                    sh 'cp -r /var/lib/jenkins/jobs/Main\\ pipeline/workspace/* $WORKSPACE'
+                    sh 'cp -rf /var/lib/jenkins/jobs/Main\\ pipeline/workspace/* $WORKSPACE'
 
                     // think should work
                     //step([
@@ -229,7 +229,7 @@ pipeline {
                           sh ''' #!/bin/bash
                             pwd
                             echo $WORKSPACE
-                            cp -r /var/lib/jenkins/jobs/Main\\ pipeline/workspace/* $WORKSPACE
+                            cp -rf /var/lib/jenkins/jobs/Main\\ pipeline/workspace/* $WORKSPACE
                           '''
                         }
                     }
