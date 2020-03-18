@@ -218,7 +218,7 @@ pipeline {
             }
         }
 
-        /* stage('Docker Build Cond') {
+        /* stage('Docker source2base Build') {
             when {
                 expression { params.BUILD_TYPE == 'Full' }
             }
@@ -242,7 +242,7 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
+        stage('Docker Migration Build') {
             steps {
                 sh '''#!/bin/bash
                 docker build \
@@ -272,8 +272,7 @@ pipeline {
                     fi
 
                     if [ $APP_ENV_NAME = "qa" ];then
-                    echo '1111'
-                    docker run --rm -e APP_ENV="QA" -e DBUSER="postgres" -e DBPASSWORD="postgressecret" \
+                    docker run -e APP_ENV="QA" -e DBUSER="postgres" -e DBPASSWORD="postgressecret" \
                     933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration \
                     bash -c 'cd /code/source && \
                     sed -i "s~DBUSER~DBROOTUSER~g" /code/source/source/local_settings.py && \
