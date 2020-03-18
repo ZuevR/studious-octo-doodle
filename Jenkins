@@ -239,11 +239,8 @@ pipeline {
 
                     /*sh '''#!/bin/bash
                     docker build \
-                    --build-arg KANE_BASE=${DOCKER_BASE} \
-                    -t ${DOCKER_BUILD_MIGRATION}:latest \
                     -t ${DOCKER_BUILD_MIGRATION}:${JGIT_TAG}-migration \
                     -f Dockerfile .
-                    #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:latest
                     #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:${JGIT_TAG}-migration
                     '''*/
 
@@ -308,11 +305,100 @@ pipeline {
 
                             script {
                                 if (SERVICE != 'BACKEND' && SERVICE != 'ALL') {
-                                    echo '1234567890'
-                                    //currentBuild.result = 'ABORTED'
-                                    //error('Aborting the build.')
+                                    currentBuild.result = 'ABORTED'
+                                    error('Aborting the build.')
                                 }
                             }
+
+                            // think should work
+                            //step([
+                            //    $class: 'DsbNotificationBuilder',
+                            //    extensions: [
+                            //        [
+                            //            $class: 'ProfileNotifier',
+                            //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - STARTED",
+                            //            name: 'GS Venue DSB'
+                            //        ]
+                            //    ]
+                            //])
+
+                            sh ''' #!/bin/bash
+                            mv src/backend/* ./ && rm -rf src/backend
+                            rm -rf lib/code/source/apps
+                            rm -rf lib/code/source/source_client
+
+                            #Applying custom nginx file
+                            rm nginx_site.conf
+                            mv nginx_site-13543.conf nginx_site.conf
+
+                            mv lib/source2apps lib/code/source/apps
+
+                            cp -r src/maintenance lib/code/
+
+                            mv lib/funimation-source lib/code/source/source_client
+                            cp local_settings.py lib/code/source/source/local_settings.py
+
+                            cp local_settings_client.py lib/code/source/source_client/local_settings.py
+
+                            sed -i "s/.*FROM.*/FROM 933909558080.dkr.ecr.us-west-2.amazonaws.com\\/source2base:latest/" Dockerfile
+                            '''
+
+                            /*sh '''#!/bin/bash
+                            docker build \
+                            -t ${DOCKER_BUILD_MIGRATION}:latest \
+                            -t ${DOCKER_BUILD_MIGRATION}:${JGIT_TAG} \
+                            -f Dockerfile .
+                            #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:latest
+                            #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:${JGIT_TAG}
+                            '''*/
+
+                            // think should work
+                            //step([
+                            //    $class: 'DsbNotificationBuilder',
+                            //    extensions: [
+                            //        [
+                            //            $class: 'ProfileNotifier',
+                            //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - DOCKER IMAGE CREATED\n ${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - UPDATING AWS.....",
+                            //            name: 'GS Venue DSB'
+                            //        ]
+                            //    ]
+                            //])
+
+                            sh '''#!/bin/bash
+                            if [ $APP_ENV_NAME = "development" ]
+                            then
+                            ENVIRONMENT=DEV
+                            fi
+
+                            if [ $APP_ENV_NAME = "qa" ]
+                            then
+                            ENVIRONMENT=QA
+                            fi
+
+                            if [ $APP_ENV_NAME = "uat" ]
+                            then
+                            ENVIRONMENT=UAT
+                            fi
+
+                            echo $ENVIRONMENT
+
+                            if [ "${SERVICE}" = "ALL" ];then
+                            #ecs deploy VENUE-${ENVIRONMENT} --region us-west-2 api -t ${tagName} || true
+                            #ecs deploy VENUE-${ENVIRONMENT} --region us-west-2 api-internal -t ${tagName} || true
+
+
+                            elif [ "${SERVICE}" == "BACKEND" ];then
+                            #ecs deploy VENUE-${ENVIRONMENT} --region us-west-2 api -t ${tagName} || true
+                            #ecs deploy VENUE-${ENVIRONMENT} --region us-west-2 api-internal -t ${tagName} || true
+                            fi
+
+
+                            echo "Wait for the service to reach a stable status"
+                            #aws ecs wait services-stable  --cluster VENUE-${ENVIRONMENT} --services api-internal --region us-west-2 || true
+                            #aws ecs wait services-stable  --cluster VENUE-${ENVIRONMENT} --services api --region us-west-2 || true
+                            #aws ecs wait services-stable  --cluster VENUE-${ENVIRONMENT} --services api-internal --region us-west-2
+                            #aws ecs wait services-stable  --cluster VENUE-${ENVIRONMENT} --services api --region us-west-2
+                            '''
                         }
                     }
                 }
