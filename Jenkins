@@ -237,7 +237,7 @@ pipeline {
                         }
                     }
 
-                    sh '''#!/bin/bash
+                    /*sh '''#!/bin/bash
                     docker build \
                     --build-arg KANE_BASE=${DOCKER_BASE} \
                     -t ${DOCKER_BUILD_MIGRATION}:latest \
@@ -245,82 +245,70 @@ pipeline {
                     -f Dockerfile .
                     #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:latest
                     #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:${JGIT_TAG}-migration
-                    '''
+                    '''*/
+
+                    /*sh ''' #!/bin/bash
+                    #docker pull 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration > /dev/null
+
+                    runmigration() {
+                        if [ $APP_ENV_NAME = "development" ];then
+                        docker run --rm -e APP_ENV="DEV" -e DBUSER="postgres" -e DBPASSWORD="postgressecret" \
+                        933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration \
+                        bash  -c 'cd /code/source && \
+                        sed -i "s~DBUSER~DBROOTUSER~g" /code/source/source/local_settings.py && \
+                        sed -i "s~DBPASSWORD~DBROOTPASSWORD~g" /code/source/source/local_settings.py && \
+                        ./manage.py migrate --noinput'
+                        fi
+
+                        if [ $APP_ENV_NAME = "qa" ];then
+                        docker run --rm -e APP_ENV="QA" -e DBUSER="postgres" -e DBPASSWORD="postgressecret" \
+                        933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration \
+                        bash -c 'cd /code/source && \
+                        sed -i "s~DBUSER~DBROOTUSER~g" /code/source/source/local_settings.py && \
+                        sed -i "s~DBPASSWORD~DBROOTPASSWORD~g" /code/source/source/local_settings.py && \
+                        ./manage.py migrate --noinput'
+                        fi
+
+                        if [ $APP_ENV_NAME = "uat" ];then
+                        docker run --rm -e APP_ENV="UAT" -e DBUSER="postgres" -e DBPASSWORD="2fNX1}[OQm1D" \
+                        933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration \
+                        bash -c 'cd /code/source && \
+                        sed -i "s~DBUSER~DBROOTUSER~g" /code/source/source/local_settings.py && \
+                        sed -i "s~DBPASSWORD~DBROOTPASSWORD~g" /code/source/source/local_settings.py && \
+                        ./manage.py migrate --noinput'
+                        fi
+                    }
+
+                    exitjob() {
+                        echo "The job will not run any migration due to the fact that it was not selected"
+                        exit 0
+                    }
+
+                    if [ "${RUN_MIGRATIONS}" = "yes" ];then
+                    echo $RUN_MIGRATIONS
+                    #runmigration
+
+                    elif [ "${RUN_MIGRATIONS}" = "no" ];then
+                    exitjob
+
+                    fi
+                    '''*/
+
+                    //findText alsoCheckConsoleOutput: true, regexp: 'Your models have changes that are not yet reflected in a migration', unstableIfFound: true
                 }
             }
         }
 
-        stage('Workspace example') {
+        stage('Venue Backend') {
             parallel {
-                stage('idk') {
+                stage('Api') {
                     steps {
-                        ws('Example') {
-                          sh ''' #!/bin/bash
-                            pwd
-                            echo $WORKSPACE
-                            cp -rf /var/lib/jenkins/jobs/Main\\ pipeline/workspace/* $WORKSPACE
-                          '''
+                        ws('backend-api') {
+                          sh 'cp -rf /var/lib/jenkins/jobs/Main\\ pipeline/workspace/* $WORKSPACE'
                         }
                     }
                 }
             }
         }
-
-        /* stage('Just shell') {
-            steps {
-                sh ''' #!/bin/bash
-                #docker pull 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration > /dev/null
-
-                runmigration() {
-                    if [ $APP_ENV_NAME = "development" ];then
-                    docker run --rm -e APP_ENV="DEV" -e DBUSER="postgres" -e DBPASSWORD="postgressecret" \
-                    933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration \
-                    bash  -c 'cd /code/source && \
-                    sed -i "s~DBUSER~DBROOTUSER~g" /code/source/source/local_settings.py && \
-                    sed -i "s~DBPASSWORD~DBROOTPASSWORD~g" /code/source/source/local_settings.py && \
-                    ./manage.py migrate --noinput'
-                    fi
-
-                    if [ $APP_ENV_NAME = "qa" ];then
-                    docker run --rm -e APP_ENV="QA" -e DBUSER="postgres" -e DBPASSWORD="postgressecret" \
-                    933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration \
-                    bash -c 'cd /code/source && \
-                    sed -i "s~DBUSER~DBROOTUSER~g" /code/source/source/local_settings.py && \
-                    sed -i "s~DBPASSWORD~DBROOTPASSWORD~g" /code/source/source/local_settings.py && \
-                    ./manage.py migrate --noinput'
-                    fi
-
-                    if [ $APP_ENV_NAME = "uat" ];then
-                    docker run --rm -e APP_ENV="UAT" -e DBUSER="postgres" -e DBPASSWORD="2fNX1}[OQm1D" \
-                    933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration \
-                    bash -c 'cd /code/source && \
-                    sed -i "s~DBUSER~DBROOTUSER~g" /code/source/source/local_settings.py && \
-                    sed -i "s~DBPASSWORD~DBROOTPASSWORD~g" /code/source/source/local_settings.py && \
-                    ./manage.py migrate --noinput'
-                    fi
-                }
-
-                exitjob() {
-                    echo "The job will not run any migration due to the fact that it was not selected"
-                    exit 0
-                }
-
-                if [ "${RUN_MIGRATIONS}" = "yes" ];then
-                echo $RUN_MIGRATIONS
-                #runmigration
-
-                elif [ "${RUN_MIGRATIONS}" = "no" ];then
-                exitjob
-
-                fi
-                '''
-            }
-        }
-
-        stage('Post Migration') {
-            steps {
-                findText alsoCheckConsoleOutput: true, regexp: 'Your models have changes that are not yet reflected in a migration', unstableIfFound: true
-            }
-        } */
     }
 }
