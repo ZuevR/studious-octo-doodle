@@ -313,9 +313,7 @@ pipeline {
                 script {
                     echo 'Some error'
                 }
-                publishers {
-                    findText regexp: 'Some error', alsoCheckConsoleOutput: true, unstableIfFound: true
-                }
+                findText alsoCheckConsoleOutput: true, regexp: 'Some error', unstableIfFound: true
             }
         }
     }
