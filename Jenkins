@@ -307,7 +307,7 @@ pipeline {
                             sh 'cp -rf /var/lib/jenkins/jobs/Main\\ pipeline/workspace/* $WORKSPACE'
 
                             script {
-                                if (SERVICE != 'BACKEND' || SERVICE != 'ALL') {
+                                if (SERVICE != 'BACKEND' && SERVICE != 'ALL') {
                                     echo '1234567890'
                                     //currentBuild.result = 'ABORTED'
                                     //error('Aborting the build.')
