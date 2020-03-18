@@ -305,16 +305,16 @@ pipeline {
                 fi
                 '''
             }
+        }
 
-            stage('CHECKOUT') {
-                steps{
+        stage('CHECKOUT') {
+            steps{
 
-                    script {
-                        echo 'Some error'
-                    }
-                    publishers {
-                        findText regexp: 'Some error', alsoCheckConsoleOutput: true, unstableIfFound: true
-                    }
+                script {
+                    echo 'Some error'
+                }
+                publishers {
+                    findText regexp: 'Some error', alsoCheckConsoleOutput: true, unstableIfFound: true
                 }
             }
         }
