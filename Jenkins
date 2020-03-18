@@ -155,62 +155,69 @@ pipeline {
                     url: 'git@github.com:maxmind/geoipupdate.git']]
                 ])
 
-                //timestamps {
-                //    ansiColor('xterm') {
-                //        sh ''' #!/bin/bash
-                //        sed -i "s/BUILD_NUMBER_PLACEHOLDER/${BUILD_NUMBER}/g" src/backend/Dockerfile
-                //        sed -i "s/JENKINS_JOB_NAME_PLACEHOLDER/${JOB_NAME}/g" src/backend/Dockerfile
-                //        sed -i "s/GIT_TAG_PLACEHOLDER/${JGIT_TAG:-Untagged}/g" src/backend/Dockerfile
-                //        sed -i "s/GIT_BRANCH_PLACEHOLDER/${WORK_BRANCH}/g" src/backend/Dockerfile
-                //        '''
-                //    }
-                //}
+                timestamps {
+                    ansiColor('xterm') {
+                        sh ''' #!/bin/bash
+                        sed -i "s/BUILD_NUMBER_PLACEHOLDER/${BUILD_NUMBER}/g" src/backend/Dockerfile
+                        sed -i "s/JENKINS_JOB_NAME_PLACEHOLDER/${JOB_NAME}/g" src/backend/Dockerfile
+                        sed -i "s/GIT_TAG_PLACEHOLDER/${JGIT_TAG:-Untagged}/g" src/backend/Dockerfile
+                        sed -i "s/GIT_BRANCH_PLACEHOLDER/${WORK_BRANCH}/g" src/backend/Dockerfile
+                        '''
+                    }
+                }
+            }
+        }
 
-                // think should work
-                //step([
-                //    $class: 'DsbNotificationBuilder',
-                //    extensions: [
-                //        [
-                //            $class: 'ProfileNotifier',
-                //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - STARTED",
-                //            name: 'GS Venue DSB'
-                //        ]
-                //    ]
-                //])
+        stage('Migration') {
+            steps {
+                ws('migration-workspace') {
+                    sh 'cp -r /var/lib/jenkins/jobs/Main\\ pipeline/workspace/* $WORKSPACE'
 
+                    // think should work
+                    //step([
+                    //    $class: 'DsbNotificationBuilder',
+                    //    extensions: [
+                    //        [
+                    //            $class: 'ProfileNotifier',
+                    //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - STARTED",
+                    //            name: 'GS Venue DSB'
+                    //        ]
+                    //    ]
+                    //])
 
-                //timestamps {
-                //    ansiColor('xterm') {
-                //        sh ''' #!/bin/bash
-                //        mv src/backend/* ./ && rm -rf src/backend
-                //        rm -rf lib/code/source/apps
-                //        rm -rf lib/code/source/source_client
+                    timestamps {
+                        ansiColor('xterm') {
+                            sh ''' #!/bin/bash
+                            mv src/backend/* ./ && rm -rf src/backend
+                            rm -rf lib/code/source/apps
+                            rm -rf lib/code/source/source_client
 
-                //        mv lib/source2apps lib/code/source/apps
+                            mv lib/source2apps lib/code/source/apps
 
-                //        cp -r src/maintenance lib/code/
+                            cp -r src/maintenance lib/code/
 
-                //        mv lib/funimation-source lib/code/source/source_client
-                //        cp local_settings.py lib/code/source/source/local_settings.py
+                            mv lib/funimation-source lib/code/source/source_client
+                            cp local_settings.py lib/code/source/source/local_settings.py
 
-                //        cp local_settings_client.py lib/code/source/source_client/local_settings.py
+                            cp local_settings_client.py lib/code/source/source_client/local_settings.py
 
-                //        sed -i "s/.*FROM.*/FROM 933909558080.dkr.ecr.us-west-2.amazonaws.com\\/source2base-${APP_ENV_NAME}:latest/" Dockerfile
+                            sed -i "s/.*FROM.*/FROM 933909558080.dkr.ecr.us-west-2.amazonaws.com\\/source2base-${APP_ENV_NAME}:latest/" Dockerfile
 
-                //        if [ $APP_ENV_NAME = "qa" ]
-                //        then
-                //        echo "ADD 0002_auto_20180629_1711.config /usr/local/lib/python2.7/dist-packages/social/apps/django_app/default/migrations/0002_auto_20180629_1711.py" >> Dockerfile
-                //        fi
+                            if [ $APP_ENV_NAME = "qa" ]
+                            then
+                            echo "ADD 0002_auto_20180629_1711.config /usr/local/lib/python2.7/dist-packages/social/apps/django_app/default/migrations/0002_auto_20180629_1711.py" >> Dockerfile
+                            fi
 
-                //        if [ $APP_ENV_NAME = "uat" ]
-                //        then
-                //        echo "ADD 0002_auto_20180629_1711.config /usr/local/lib/python2.7/dist-packages/social/apps/django_app/default/migrations/0002_auto_20180725_2123.py" >> Dockerfile
-                //        fi
+                            if [ $APP_ENV_NAME = "uat" ]
+                            then
+                            echo "ADD 0002_auto_20180629_1711.config /usr/local/lib/python2.7/dist-packages/social/apps/django_app/default/migrations/0002_auto_20180725_2123.py" >> Dockerfile
+                            fi
 
-                //        $(aws ecr get-login --region=us-west-2 --no-include-email)
-                //        '''
-                //    }
-                //}
+                            $(aws ecr get-login --region=us-west-2 --no-include-email)
+                            '''
+                        }
+                    }
+                }
             }
         }
 
