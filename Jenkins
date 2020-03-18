@@ -14,7 +14,7 @@ pipeline {
                     } else if ("${WORK_BRANCH}" == "qa") {
                         env.APP_ENV_NAME = "qa"
                         // this test data
-                        env.JGIT_TAG = "3.2.1637.fun-be-qa"
+                        env.JGIT_TAG = "3.2.1640.fun-be-qa"
                     } else if ("${WORK_BRANCH}" == "stage") {
                         env.APP_ENV_NAME = "uat"
                         env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-be-${APP_ENV_NAME}"
@@ -297,7 +297,7 @@ pipeline {
 
                 if [ "${RUN_MIGRATIONS}" = "yes" ];then
                 echo $RUN_MIGRATIONS
-                #runmigration
+                runmigration
 
                 elif [ "${RUN_MIGRATIONS}" = "no" ];then
                 exitjob
