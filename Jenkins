@@ -250,8 +250,8 @@ pipeline {
                 -t ${DOCKER_BUILD_MIGRATION}:latest \
                 -t ${DOCKER_BUILD_MIGRATION}:${JGIT_TAG}-migration \
                 -f Dockerfile .
-                #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV}:latest
-                #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV}:${JGIT_TAG}-migration
+                #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:latest
+                #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:${JGIT_TAG}-migration
                 '''
             }
         } */
@@ -259,7 +259,7 @@ pipeline {
         stage('Just shell') {
             steps {
                 sh ''' #!/bin/bash
-
+                docker pull 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration > /dev/null
 
                 runmigration() {
                     if [ $APP_ENV_NAME = "development" ];then
@@ -272,7 +272,7 @@ pipeline {
                     fi
 
                     if [ $APP_ENV_NAME = "qa" ];then
-                    docker run -e APP_ENV="QA" -e DBUSER="postgres" -e DBPASSWORD="postgressecret" \
+                    docker run --rm -e APP_ENV="QA" -e DBUSER="postgres" -e DBPASSWORD="postgressecret" \
                     933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration \
                     bash -c 'cd /code/source && \
                     sed -i "s~DBUSER~DBROOTUSER~g" /code/source/source/local_settings.py && \
@@ -297,7 +297,7 @@ pipeline {
 
                 if [ "${RUN_MIGRATIONS}" = "yes" ];then
                 echo $RUN_MIGRATIONS
-                runmigration
+                #runmigration
 
                 elif [ "${RUN_MIGRATIONS}" = "no" ];then
                 exitjob
