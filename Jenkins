@@ -219,7 +219,7 @@ pipeline {
                     }
 
                     script {
-                        if (params.BUILD_TYPE == "Full") {
+                        /*if (params.BUILD_TYPE == "Full") {
                             sh '''#!/bin/bash
                             docker build \
                             --cache-from ${DOCKER_BASE_COND} \
@@ -229,13 +229,24 @@ pipeline {
                             #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:latest
                             #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:${JGIT_TAG}
                             '''
-                        } else {
-                            echo '0987654321'
+                        }*/
+
+                        if (RUN_MIGRATIONS != 'yes') {
+                            currentBuild.result = 'ABORTED'
+                            error('Aborting the build.')
                         }
                     }
+
+                    sh '''#!/bin/bash
+                    docker build \
+                    --build-arg KANE_BASE=${DOCKER_BASE} \
+                    -t ${DOCKER_BUILD_MIGRATION}:latest \
+                    -t ${DOCKER_BUILD_MIGRATION}:${JGIT_TAG}-migration \
+                    -f Dockerfile .
+                    #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:latest
+                    #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:${JGIT_TAG}-migration
+                    '''
                 }
-
-
             }
         }
 
