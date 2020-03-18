@@ -304,7 +304,15 @@ pipeline {
                 stage('Api') {
                     steps {
                         ws('backend-api') {
-                          sh 'cp -rf /var/lib/jenkins/jobs/Main\\ pipeline/workspace/* $WORKSPACE'
+                            sh 'cp -rf /var/lib/jenkins/jobs/Main\\ pipeline/workspace/* $WORKSPACE'
+
+                            script {
+                                if (SERVICE != 'BACKEND' || SERVICE != 'ALL') {
+                                    echo '1234567890'
+                                    //currentBuild.result = 'ABORTED'
+                                    //error('Aborting the build.')
+                                }
+                            }
                         }
                     }
                 }
