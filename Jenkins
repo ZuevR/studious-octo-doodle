@@ -259,7 +259,7 @@ pipeline {
         stage('Just shell') {
             steps {
                 sh ''' #!/bin/bash
-                docker pull 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration > /dev/null
+                #docker pull 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration > /dev/null
 
                 runmigration() {
                     if [ $APP_ENV_NAME = "development" ];then
@@ -297,13 +297,25 @@ pipeline {
 
                 if [ "${RUN_MIGRATIONS}" = "yes" ];then
                 echo $RUN_MIGRATIONS
-                runmigration
+                #runmigration
 
                 elif [ "${RUN_MIGRATIONS}" = "no" ];then
                 exitjob
 
                 fi
                 '''
+            }
+
+            stage('CHECKOUT') {
+                steps{
+
+                    script {
+                        echo 'Some error'
+                    }
+                    publishers {
+                        findText regexp: 'Some error', alsoCheckConsoleOutput: true, unstableIfFound: true
+                    }
+                }
             }
         }
     }
