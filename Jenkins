@@ -388,7 +388,7 @@ pipeline {
                             #ecs deploy VENUE-${ENVIRONMENT} --region us-west-2 api-internal -t ${JGIT_TAG} || true
 
 
-                            elif [ "${SERVICE}" = "BACKEND" ];then
+                            if [ "${SERVICE}" = "BACKEND" ];then
                             #ecs deploy VENUE-${ENVIRONMENT} --region us-west-2 api -t ${JGIT_TAG} || true
                             #ecs deploy VENUE-${ENVIRONMENT} --region us-west-2 api-internal -t ${JGIT_TAG} || true
                             fi
@@ -481,7 +481,7 @@ pipeline {
                             #ecs deploy VENUE-${ENVIRONMENT} cms -t cms-${JGIT_TAG} --region us-west-2 || true
                             #sleep 10
 
-                            elif [ "${SERVICE}" == "CMS" ];then
+                            if [ "${SERVICE}" = "CMS" ];then
                             #ecs deploy VENUE-${ENVIRONMENT} cms -t cms-${JGIT_TAG} --region us-west-2 || true
                             #sleep 10
                             fi
