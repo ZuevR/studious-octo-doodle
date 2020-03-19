@@ -472,6 +472,9 @@ pipeline {
                             ENVIRONMENT=UAT
                             fi
 
+                            if [ $SERVICE = 'ALL' ]; then
+                                echo '123'
+                            fi
                             #if [ $SERVICE = "ALL" || $SERVICE = "CMS" ]
                             #then
                             #ecs deploy VENUE-${ENVIRONMENT} cms -t cms-${JGIT_TAG} --region us-west-2 || true
