@@ -474,8 +474,6 @@ pipeline {
 
                             if [ $SERVICE = "ALL" || $SERVICE = "CMS" ]
                             then
-                            #ecs deploy VENUE-${ENVIRONMENT} cms -t cms-${JGIT_TAG} --region us-west-2 || true
-                            #sleep 10
                             fi
 
                             '''
