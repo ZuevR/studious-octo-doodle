@@ -293,6 +293,7 @@ pipeline {
                     '''*/
 
                     //findText alsoCheckConsoleOutput: true, regexp: 'Your models have changes that are not yet reflected in a migration', unstableIfFound: true
+                    cleanWs()
                 }
             }
         }
@@ -306,13 +307,6 @@ pipeline {
                     steps {
                         ws('backend-api') {
                             sh 'cp -rf /var/lib/jenkins/jobs/Main\\ pipeline/workspace/* $WORKSPACE'
-
-                            //script {
-                            //    if (SERVICE != 'BACKEND' && SERVICE != 'ALL') {
-                            //        currentBuild.result = 'ABORTED'
-                            //        error('Aborting the build.')
-                            //    }
-                            //}
 
                             // think should work
                             //step([
@@ -390,6 +384,8 @@ pipeline {
                             true
                             fi
                             '''
+
+                            cleanWs()
                         }
                     }
                 }
@@ -401,13 +397,6 @@ pipeline {
                     steps {
                         ws('backend-cms') {
                             sh 'cp -rf /var/lib/jenkins/jobs/Main\\ pipeline/workspace/* $WORKSPACE'
-
-                            //script {
-                            //    if (SERVICE != 'CMS' && SERVICE != 'ALL') {
-                            //        currentBuild.result = 'ABORTED'
-                            //        error('Aborting the build.')
-                            //    }
-                            //}
 
                             // think should work
                             //step([
@@ -495,6 +484,7 @@ pipeline {
                             //        ]
                             //    ]
                             //])
+                            cleanWs()
                         }
                     }
                 }
@@ -506,13 +496,6 @@ pipeline {
                     steps {
                         ws('backend-rqworkers') {
                             sh 'cp -rf /var/lib/jenkins/jobs/Main\\ pipeline/workspace/* $WORKSPACE'
-
-                            //script {
-                            //    if (SERVICE != 'RQWORKERS' && SERVICE != 'ALL') {
-                            //        currentBuild.result = 'ABORTED'
-                            //        error('Aborting the build.')
-                            //    }
-                            //}
 
                             // think should work
                             //step([
@@ -590,6 +573,7 @@ pipeline {
                             #ecs deploy VENUE-${ENVIRONMENT} --region us-west-2 rqscheduler -t rqworker-${JGIT_TAG} || true
                             #ecs deploy VENUE-${ENVIRONMENT} --region us-west-2 rqworker -t rqworker-${JGIT_TAG} || true
                             '''
+                            cleanWs()
                         }
                     }
                 }
