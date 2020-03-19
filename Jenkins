@@ -381,12 +381,11 @@ pipeline {
                             ENVIRONMENT=UAT
                             fi
 
-                            if [ $SERVICE = "ALL" || $SERVICE = "BACKEND" ]
-                            then
+                            if [ $SERVICE = 'ALL' ] || [ $SERVICE = 'BACKEND' ]; then
                             #ecs deploy VENUE-${ENVIRONMENT} --region us-west-2 api -t ${JGIT_TAG} || true
                             #ecs deploy VENUE-${ENVIRONMENT} --region us-west-2 api-internal -t ${JGIT_TAG} || true
+                            true
                             fi
-
                             '''
                         }
                     }
@@ -472,7 +471,7 @@ pipeline {
                             ENVIRONMENT=UAT
                             fi
 
-                            if [ $SERVICE = 'ALL' ] || [ $SERVICE = 'ALL' ]; then
+                            if [ $SERVICE = 'ALL' ] || [ $SERVICE = 'CMS' ]; then
                             #ecs deploy VENUE-${ENVIRONMENT} cms -t cms-${JGIT_TAG} --region us-west-2 || true
                             #sleep 10
                             true
