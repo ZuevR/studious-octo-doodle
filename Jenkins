@@ -8,20 +8,24 @@ pipeline {
                     if ("${tagToCreate}".isEmpty()) {
                         throw new Exception("tagToCreate field is missing, please check")
                     }
+
                     if ("${WORK_BRANCH}" == "dev") {
                         env.APP_ENV_NAME = "development"
-                        env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-be-${APP_ENV_NAME}"
                     } else if ("${WORK_BRANCH}" == "qa") {
                         env.APP_ENV_NAME = "qa"
-                        // this test data
-                        env.JGIT_TAG = "3.2.1640.fun-be-qa"
                     } else if ("${WORK_BRANCH}" == "stage") {
                         env.APP_ENV_NAME = "uat"
-                        env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-be-${APP_ENV_NAME}"
                     } else {
                         echo "WORK_BRANCH field is missing, please check"
                         exit 1
                     }
+
+                    env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-be-${APP_ENV_NAME}"
+
+                    /** HARDCODE for tests */
+                    /* ------------------- */
+                    env.JGIT_TAG = "3.2.1640.fun-be-qa"
+                    /* ------------------- */
 
                     env.DOCKER_BASE_COND = "${ECR_URL}/source2base-${APP_ENV_NAME}"
                     env.DOCKER_BUILD_MIGRATION = "${ECR_URL}/venue-be-${APP_ENV_NAME}"
