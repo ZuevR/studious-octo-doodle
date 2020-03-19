@@ -22,6 +22,7 @@ pipeline {
                         echo "WORK_BRANCH field is missing, please check"
                         exit 1
                     }
+
                     env.DOCKER_BASE_COND = "${ECR_URL}/source2base-${APP_ENV_NAME}"
                     env.DOCKER_BUILD_MIGRATION = "${ECR_URL}/venue-be-${APP_ENV_NAME}"
                 }
