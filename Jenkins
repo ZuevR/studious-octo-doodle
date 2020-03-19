@@ -299,215 +299,220 @@ pipeline {
 
         stage('Venue Backend') {
             parallel {
-                when(SERVICE == 'BACKEND' && SERVICE == 'ALL') {
-                    stage('Api') {
-                        steps {
-                            ws('backend-api') {
-                                sh 'cp -rf /var/lib/jenkins/jobs/Main\\ pipeline/workspace/* $WORKSPACE'
+                stage('Api') {
+                    when {
+                        expression { SERVICE == 'BACKEND' || SERVICE == 'ALL' }
+                    }
+                    steps {
+                        ws('backend-api') {
+                            sh 'cp -rf /var/lib/jenkins/jobs/Main\\ pipeline/workspace/* $WORKSPACE'
 
-                                //script {
-                                //    if (SERVICE != 'BACKEND' && SERVICE != 'ALL') {
-                                //        currentBuild.result = 'ABORTED'
-                                //        error('Aborting the build.')
-                                //    }
-                                //}
+                            //script {
+                            //    if (SERVICE != 'BACKEND' && SERVICE != 'ALL') {
+                            //        currentBuild.result = 'ABORTED'
+                            //        error('Aborting the build.')
+                            //    }
+                            //}
 
-                                // think should work
-                                //step([
-                                //    $class: 'DsbNotificationBuilder',
-                                //    extensions: [
-                                //        [
-                                //            $class: 'ProfileNotifier',
-                                //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - STARTED",
-                                //            name: 'GS Venue DSB'
-                                //        ]
-                                //    ]
-                                //])
+                            // think should work
+                            //step([
+                            //    $class: 'DsbNotificationBuilder',
+                            //    extensions: [
+                            //        [
+                            //            $class: 'ProfileNotifier',
+                            //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - STARTED",
+                            //            name: 'GS Venue DSB'
+                            //        ]
+                            //    ]
+                            //])
 
-                                sh ''' #!/bin/bash
-                                mv src/backend/* ./ && rm -rf src/backend
-                                rm -rf lib/code/source/apps
-                                rm -rf lib/code/source/source_client
+                            sh ''' #!/bin/bash
+                            mv src/backend/* ./ && rm -rf src/backend
+                            rm -rf lib/code/source/apps
+                            rm -rf lib/code/source/source_client
 
-                                #Applying custom nginx file
-                                rm nginx_site.conf
-                                mv nginx_site-13543.conf nginx_site.conf
+                            #Applying custom nginx file
+                            rm nginx_site.conf
+                            mv nginx_site-13543.conf nginx_site.conf
 
-                                mv lib/source2apps lib/code/source/apps
+                            mv lib/source2apps lib/code/source/apps
 
-                                cp -r src/maintenance lib/code/
+                            cp -r src/maintenance lib/code/
 
-                                mv lib/funimation-source lib/code/source/source_client
-                                cp local_settings.py lib/code/source/source/local_settings.py
+                            mv lib/funimation-source lib/code/source/source_client
+                            cp local_settings.py lib/code/source/source/local_settings.py
 
-                                cp local_settings_client.py lib/code/source/source_client/local_settings.py
+                            cp local_settings_client.py lib/code/source/source_client/local_settings.py
 
-                                sed -i "s/.*FROM.*/FROM 933909558080.dkr.ecr.us-west-2.amazonaws.com\\/source2base:latest/" Dockerfile
-                                '''
+                            sed -i "s/.*FROM.*/FROM 933909558080.dkr.ecr.us-west-2.amazonaws.com\\/source2base:latest/" Dockerfile
+                            '''
 
-                                /*sh '''#!/bin/bash
-                                docker build \
-                                -t ${DOCKER_BUILD_MIGRATION}:latest \
-                                -t ${DOCKER_BUILD_MIGRATION}:${JGIT_TAG} \
-                                -f Dockerfile .
-                                #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:latest
-                                #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:${JGIT_TAG}
-                                '''*/
+                            /*sh '''#!/bin/bash
+                            docker build \
+                            -t ${DOCKER_BUILD_MIGRATION}:latest \
+                            -t ${DOCKER_BUILD_MIGRATION}:${JGIT_TAG} \
+                            -f Dockerfile .
+                            #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:latest
+                            #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:${JGIT_TAG}
+                            '''*/
 
-                                // think should work
-                                //step([
-                                //    $class: 'DsbNotificationBuilder',
-                                //    extensions: [
-                                //        [
-                                //            $class: 'ProfileNotifier',
-                                //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - DOCKER IMAGE CREATED\n ${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - UPDATING AWS.....",
-                                //            name: 'GS Venue DSB'
-                                //        ]
-                                //    ]
-                                //])
+                            // think should work
+                            //step([
+                            //    $class: 'DsbNotificationBuilder',
+                            //    extensions: [
+                            //        [
+                            //            $class: 'ProfileNotifier',
+                            //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - DOCKER IMAGE CREATED\n ${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - UPDATING AWS.....",
+                            //            name: 'GS Venue DSB'
+                            //        ]
+                            //    ]
+                            //])
 
-                                sh '''#!/bin/bash
-                                if [ $APP_ENV_NAME = "development" ]
-                                then
-                                ENVIRONMENT=DEV
-                                fi
+                            sh '''#!/bin/bash
+                            if [ $APP_ENV_NAME = "development" ]
+                            then
+                            ENVIRONMENT=DEV
+                            fi
 
-                                if [ $APP_ENV_NAME = "qa" ]
-                                then
-                                ENVIRONMENT=QA
-                                fi
+                            if [ $APP_ENV_NAME = "qa" ]
+                            then
+                            ENVIRONMENT=QA
+                            fi
 
-                                if [ $APP_ENV_NAME = "uat" ]
-                                then
-                                ENVIRONMENT=UAT
-                                fi
+                            if [ $APP_ENV_NAME = "uat" ]
+                            then
+                            ENVIRONMENT=UAT
+                            fi
 
-                                if [ $SERVICE = 'ALL' ] || [ $SERVICE = 'BACKEND' ]; then
-                                #ecs deploy VENUE-${ENVIRONMENT} --region us-west-2 api -t ${JGIT_TAG} || true
-                                #ecs deploy VENUE-${ENVIRONMENT} --region us-west-2 api-internal -t ${JGIT_TAG} || true
-                                true
-                                fi
-                                '''
-                            }
+                            if [ $SERVICE = 'ALL' ] || [ $SERVICE = 'BACKEND' ]; then
+                            #ecs deploy VENUE-${ENVIRONMENT} --region us-west-2 api -t ${JGIT_TAG} || true
+                            #ecs deploy VENUE-${ENVIRONMENT} --region us-west-2 api-internal -t ${JGIT_TAG} || true
+                            true
+                            fi
+                            '''
                         }
                     }
                 }
 
-                when (SERVICE == 'CMS' && SERVICE == 'ALL') {
-                    stage('CMS') {
-                        steps {
-                            ws('backend-cms') {
-                                sh 'cp -rf /var/lib/jenkins/jobs/Main\\ pipeline/workspace/* $WORKSPACE'
+                stage('CMS') {
+                   when {
+                       expression { SERVICE == 'CMS' || SERVICE == 'ALL' }
+                   }
+                    steps {
+                        ws('backend-cms') {
+                            sh 'cp -rf /var/lib/jenkins/jobs/Main\\ pipeline/workspace/* $WORKSPACE'
 
-                                //script {
-                                //    if (SERVICE != 'CMS' && SERVICE != 'ALL') {
-                                //        currentBuild.result = 'ABORTED'
-                                //        error('Aborting the build.')
-                                //    }
-                                //}
+                            //script {
+                            //    if (SERVICE != 'CMS' && SERVICE != 'ALL') {
+                            //        currentBuild.result = 'ABORTED'
+                            //        error('Aborting the build.')
+                            //    }
+                            //}
 
-                                // think should work
-                                //step([
-                                //    $class: 'DsbNotificationBuilder',
-                                //    extensions: [
-                                //        [
-                                //            $class: 'ProfileNotifier',
-                                //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - STARTED",
-                                //            name: 'GS Venue DSB'
-                                //        ]
-                                //    ]
-                                //])
+                            // think should work
+                            //step([
+                            //    $class: 'DsbNotificationBuilder',
+                            //    extensions: [
+                            //        [
+                            //            $class: 'ProfileNotifier',
+                            //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - STARTED",
+                            //            name: 'GS Venue DSB'
+                            //        ]
+                            //    ]
+                            //])
 
-                                sh ''' #!/bin/bash
-                                mv src/backend/* ./ && rm -rf src/backend
-                                rm -rf lib/code/source/apps
-                                rm -rf lib/code/source/source_client
+                            sh ''' #!/bin/bash
+                            mv src/backend/* ./ && rm -rf src/backend
+                            rm -rf lib/code/source/apps
+                            rm -rf lib/code/source/source_client
 
-                                #Applying custom nginx file
-                                rm nginx_site.conf
-                                mv nginx_site-cms.conf nginx_site.conf
+                            #Applying custom nginx file
+                            rm nginx_site.conf
+                            mv nginx_site-cms.conf nginx_site.conf
 
-                                mv lib/source2apps lib/code/source/apps
+                            mv lib/source2apps lib/code/source/apps
 
-                                mv lib/funimation-source lib/code/source/source_client
-                                cp local_settings.py lib/code/source/source/local_settings.py
+                            mv lib/funimation-source lib/code/source/source_client
+                            cp local_settings.py lib/code/source/source/local_settings.py
 
-                                cp local_settings_client.py lib/code/source/source_client/local_settings.py
+                            cp local_settings_client.py lib/code/source/source_client/local_settings.py
 
-                                sed -i "s/.*FROM.*/FROM 933909558080.dkr.ecr.us-west-2.amazonaws.com\\/source2base:latest/" Dockerfile
-                                '''
+                            sed -i "s/.*FROM.*/FROM 933909558080.dkr.ecr.us-west-2.amazonaws.com\\/source2base:latest/" Dockerfile
+                            '''
 
-                                /*sh '''#!/bin/bash
-                                docker build \
-                                -t ${DOCKER_BUILD_MIGRATION}:latest \
-                                -t ${DOCKER_BUILD_MIGRATION}:cms-${JGIT_TAG} \
-                                -f Dockerfile .
-                                #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:latest
-                                #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:cms-${JGIT_TAG}
-                                '''*/
+                            /*sh '''#!/bin/bash
+                            docker build \
+                            -t ${DOCKER_BUILD_MIGRATION}:latest \
+                            -t ${DOCKER_BUILD_MIGRATION}:cms-${JGIT_TAG} \
+                            -f Dockerfile .
+                            #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:latest
+                            #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:cms-${JGIT_TAG}
+                            '''*/
 
-                                // think should work
-                                //step([
-                                //    $class: 'DsbNotificationBuilder',
-                                //    extensions: [
-                                //        [
-                                //            $class: 'ProfileNotifier',
-                                //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - DOCKER IMAGE CREATED\n ${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - UPDATING AWS.....",
-                                //            name: 'GS Venue DSB'
-                                //        ]
-                                //    ]
-                                //])
+                            // think should work
+                            //step([
+                            //    $class: 'DsbNotificationBuilder',
+                            //    extensions: [
+                            //        [
+                            //            $class: 'ProfileNotifier',
+                            //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - DOCKER IMAGE CREATED\n ${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - UPDATING AWS.....",
+                            //            name: 'GS Venue DSB'
+                            //        ]
+                            //    ]
+                            //])
 
-                                sh '''#!/bin/bash
-                                if [ $APP_ENV_NAME = "development" ]
-                                then
-                                ENVIRONMENT=DEV
-                                fi
+                            sh '''#!/bin/bash
+                            if [ $APP_ENV_NAME = "development" ]
+                            then
+                            ENVIRONMENT=DEV
+                            fi
 
-                                if [ $APP_ENV_NAME = "qa" ]
-                                then
-                                ENVIRONMENT=QA
-                                fi
+                            if [ $APP_ENV_NAME = "qa" ]
+                            then
+                            ENVIRONMENT=QA
+                            fi
 
-                                if [ $APP_ENV_NAME = "uat" ]
-                                then
-                                ENVIRONMENT=UAT
-                                fi
+                            if [ $APP_ENV_NAME = "uat" ]
+                            then
+                            ENVIRONMENT=UAT
+                            fi
 
-                                if [ $SERVICE = 'ALL' ] || [ $SERVICE = 'CMS' ]; then
-                                #ecs deploy VENUE-${ENVIRONMENT} cms -t cms-${JGIT_TAG} --region us-west-2 || true
-                                #sleep 10
-                                true
-                                fi
-                                '''
+                            if [ $SERVICE = 'ALL' ] || [ $SERVICE = 'CMS' ]; then
+                            #ecs deploy VENUE-${ENVIRONMENT} cms -t cms-${JGIT_TAG} --region us-west-2 || true
+                            #sleep 10
+                            true
+                            fi
+                            '''
 
-                                // think should work
-                                //step([
-                                //    $class: 'DsbNotificationBuilder',
-                                //    extensions: [
-                                //        [
-                                //            $class: 'ProfileNotifier',
-                                //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - AWS TASKS RESTARTED",
-                                //            name: 'GS Venue DSB'
-                                //        ]
-                                //    ]
-                                //])
-                            }
+                            // think should work
+                            //step([
+                            //    $class: 'DsbNotificationBuilder',
+                            //    extensions: [
+                            //        [
+                            //            $class: 'ProfileNotifier',
+                            //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - AWS TASKS RESTARTED",
+                            //            name: 'GS Venue DSB'
+                            //        ]
+                            //    ]
+                            //])
                         }
                     }
                 }
 
                 stage('RqWorkers') {
+                   when {
+                       expression { SERVICE == 'RQWORKERS' || SERVICE == 'ALL' }
+                   }
                     steps {
                         ws('backend-rqworkers') {
                             sh 'cp -rf /var/lib/jenkins/jobs/Main\\ pipeline/workspace/* $WORKSPACE'
 
-                            script {
-                                if (SERVICE != 'RQWORKERS' && SERVICE != 'ALL') {
-                                    currentBuild.result = 'ABORTED'
-                                    error('Aborting the build.')
-                                }
-                            }
+                            //script {
+                            //    if (SERVICE != 'RQWORKERS' && SERVICE != 'ALL') {
+                            //        currentBuild.result = 'ABORTED'
+                            //        error('Aborting the build.')
+                            //    }
+                            //}
 
                             // think should work
                             //step([
