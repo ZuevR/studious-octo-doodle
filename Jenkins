@@ -30,7 +30,7 @@ pipeline {
                     env.DOCKER_BASE_COND = "${ECR_URL}/source2base-${APP_ENV_NAME}"
                     env.DOCKER_BUILD_MIGRATION = "${ECR_URL}/venue-be-${APP_ENV_NAME}"
 
-                    $(aws ecr get-login --region=us-west-2 --no-include-email)
+                    sh '$(aws ecr get-login --region=us-west-2 --no-include-email)'
                 }
             }
         }
