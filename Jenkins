@@ -224,17 +224,17 @@ pipeline {
                     }
 
                     script {
-                        /*if (params.BUILD_TYPE == "Full") {
+                        if (params.BUILD_TYPE == "Full") {
                             sh '''#!/bin/bash
                             docker build \
                             --cache-from ${DOCKER_BASE_COND} \
                             -t ${DOCKER_BASE_COND}:latest \
                             -t ${DOCKER_BASE_COND}:${JGIT_TAG} \
-                            -f Dockerfile .
+                            -f BaseDockerfile .
                             #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:latest
                             #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:${JGIT_TAG}
                             '''
-                        }*/
+                        }
 
                         if (RUN_MIGRATIONS != 'yes') {
                             currentBuild.result = 'ABORTED'
