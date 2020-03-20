@@ -113,42 +113,6 @@ pipeline {
         stage('Prepare Code') {
             steps {
                 checkout([$class: 'GitSCM',
-                    branches: [[name: "tags/${env.JGIT_TAG}"]],
-                    doGenerateSubmoduleConfigurations: false,
-                    extensions: [
-                        [$class: 'RelativeTargetDirectory', relativeTargetDir: 'lib/code'],
-                        [$class: 'LocalBranch', localBranch: "**"]
-                      ],
-                    submoduleCfg: [],
-                    userRemoteConfigs: [[credentialsId: "${GIT_CREDS}",
-                    url: 'git@github.com:funi-main/source-2.git']]
-                ])
-
-                checkout([$class: 'GitSCM',
-                    branches: [[name: "tags/${env.JGIT_TAG}"]],
-                    doGenerateSubmoduleConfigurations: false,
-                    extensions: [
-                        [$class: 'RelativeTargetDirectory', relativeTargetDir: 'lib/source2apps'],
-                        [$class: 'LocalBranch', localBranch: "**"]
-                      ],
-                    submoduleCfg: [],
-                    userRemoteConfigs: [[credentialsId: "${GIT_CREDS}",
-                    url: 'git@github.com:funi-main/source2apps.git']]
-                ])
-
-                checkout([$class: 'GitSCM',
-                    branches: [[name: "tags/${env.JGIT_TAG}"]],
-                    doGenerateSubmoduleConfigurations: false,
-                    extensions: [
-                        [$class: 'RelativeTargetDirectory', relativeTargetDir: 'lib/funimation-source'],
-                        [$class: 'LocalBranch', localBranch: "**"]
-                      ],
-                    submoduleCfg: [],
-                    userRemoteConfigs: [[credentialsId: "${GIT_CREDS}",
-                    url: 'git@github.com:funi-main/funimation-source.git']]
-                ])
-
-                checkout([$class: 'GitSCM',
                     branches: [[name: '*/master']],
                     doGenerateSubmoduleConfigurations: false,
                     extensions: [
@@ -176,7 +140,7 @@ pipeline {
         stage('Migration') {
             steps {
                 ws('migration-workspace') {
-                    sh 'cp -rf /var/lib/jenkins/jobs/Main\\ pipeline/workspace/* $WORKSPACE'
+                    sh 'cp -rf /var/lib/jenkins/jobs/"${JOB_NAME}"/workspace/* $WORKSPACE'
 
                     // think should work
                     //step([
@@ -224,7 +188,7 @@ pipeline {
                     }
 
                     script {
-                        if (params.BUILD_TYPE == "Full") {
+                        /*if (params.BUILD_TYPE == "Full") {
                             sh '''#!/bin/bash
                             docker build \
                             --cache-from ${DOCKER_BASE_COND} \
@@ -234,7 +198,7 @@ pipeline {
                             #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:latest
                             #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:${JGIT_TAG}
                             '''
-                        }
+                        }*/
 
                         if (RUN_MIGRATIONS != 'yes') {
                             currentBuild.result = 'ABORTED'
