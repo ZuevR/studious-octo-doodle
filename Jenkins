@@ -137,6 +137,8 @@ pipeline {
             }
         }
 
+
+
         stage('Migration') {
             steps {
                 ws('migration-workspace') {
@@ -261,7 +263,7 @@ pipeline {
                     '''*/
 
                     //findText alsoCheckConsoleOutput: true, regexp: 'Your models have changes that are not yet reflected in a migration', unstableIfFound: true
-                    cleanWs()
+                    //cleanWs()
                 }
             }
         }
@@ -353,7 +355,7 @@ pipeline {
                             fi
                             '''
 
-                            cleanWs()
+                            //cleanWs()
                         }
                     }
                 }
@@ -452,7 +454,7 @@ pipeline {
                             //        ]
                             //    ]
                             //])
-                            cleanWs()
+                            //cleanWs()
                         }
                     }
                 }
@@ -541,7 +543,7 @@ pipeline {
                             #ecs deploy VENUE-${ENVIRONMENT} --region us-west-2 rqscheduler -t rqworker-${JGIT_TAG} || true
                             #ecs deploy VENUE-${ENVIRONMENT} --region us-west-2 rqworker -t rqworker-${JGIT_TAG} || true
                             '''
-                            cleanWs()
+                            //cleanWs()
                         }
                     }
                 }
@@ -551,7 +553,7 @@ pipeline {
 
     post {
         always {
-            cleanWs()
+            //cleanWs()
         }
     }
 }
