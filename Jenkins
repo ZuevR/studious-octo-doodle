@@ -229,7 +229,7 @@ pipeline {
                             '''
 
 
-                            /*sh '''#!/bin/bash
+                            sh '''#!/bin/bash
                             docker build \
                             -t ${DOCKER_BUILD_MIGRATION}:${JGIT_TAG}-migration \
                             -f Dockerfile .
@@ -266,7 +266,7 @@ pipeline {
                             ./manage.py migrate --noinput'
                             fi
 
-                            '''*/
+                            '''
 
                         }
                     }
