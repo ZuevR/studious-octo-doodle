@@ -27,7 +27,7 @@ pipeline {
 
         stage('Set tags') {
             steps {
-                dir('src') {
+                dir('funimation-nodebb') {
                     checkout([$class: 'GitSCM',
                         branches: [[name: '*/${WORK_BRANCH}']],
                         doGenerateSubmoduleConfigurations: false,
@@ -41,6 +41,25 @@ pipeline {
                     //sshagent(["${GIT_CREDS}"]) {
                     //   sh "git@github.com:funi-main/funimation-nodebb.git ${JGIT_TAG}"
                     //}
+                }
+
+                dir('source2-main') {
+                    checkout([$class: 'GitSCM',
+                        branches: [[name: '*/venue']],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [
+                            [
+                                $class: 'SparseCheckoutPaths',
+                                sparseCheckoutPaths: [
+                                    [ $class: 'SparseCheckoutPath', path: 'nodebb/' ]
+                                ]
+                            ],
+                            [$class: 'LocalBranch', localBranch: "**"]
+                        ],
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[credentialsId: "${GIT_CREDS}",
+                        url: 'git@github.com:funi-main/source2-main.git']]
+                    ])
                 }
             }
         }
