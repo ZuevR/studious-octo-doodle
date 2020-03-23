@@ -27,23 +27,24 @@ pipeline {
 
         stage('Set tags') {
             steps {
-                dir('funimation-nodebb') {
-                    checkout([$class: 'GitSCM',
-                        branches: [[name: '*/${WORK_BRANCH}']],
-                        doGenerateSubmoduleConfigurations: false,
-                        extensions: [[$class: 'WipeWorkspace']],
-                        submoduleCfg: [],
-                        userRemoteConfigs: [[credentialsId: "${GIT_CREDS}",
-                        url: 'git@github.com:funi-main/funimation-nodebb.git']]
-                    ])
+                checkout([$class: 'GitSCM',
+                    branches: [[name: '*/${WORK_BRANCH}']],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [
+                        [$class: 'WipeWorkspace'],
+                        [$class: 'RelativeTargetDirectory', relativeTargetDir: 'forum']
+                    ],
+                    submoduleCfg: [],
+                    userRemoteConfigs: [
+                        [credentialsId: "${GIT_CREDS}", url: 'git@github.com:funi-main/funimation-nodebb.git']
+                    ]
+                ])
 
-                    sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
+                    //sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
                     //sshagent(["${GIT_CREDS}"]) {
                     //   sh "git@github.com:funi-main/funimation-nodebb.git ${JGIT_TAG}"
                     //}
-                }
 
-                dir('source2-main') {
                     checkout([$class: 'GitSCM',
                         branches: [[name: '*/venue']],
                         doGenerateSubmoduleConfigurations: false,
@@ -60,7 +61,6 @@ pipeline {
                         userRemoteConfigs: [[credentialsId: "${GIT_CREDS}",
                         url: 'git@github.com:funi-main/source2-main.git']]
                     ])
-                }
             }
         }
     }
