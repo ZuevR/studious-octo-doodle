@@ -91,7 +91,7 @@ pipeline {
                 --cache-from ${DOCKER_BUILD}:latest \
                 -t ${DOCKER_BUILD}:latest \
                 -t ${DOCKER_BUILD}:${JGIT_TAG} \
-                -f Dockerfile ./source2-main/nodebb
+                -f Dockerfile source2-main/nodebb
                 #docker push ${DOCKER_BUILD}:latest
                 #docker push ${DOCKER_BUILD}:${JGIT_TAG}
                 '''
