@@ -55,6 +55,7 @@ pipeline {
                                     [ $class: 'SparseCheckoutPath', path: 'nodebb/' ]
                                 ]
                             ],
+                            [$class: 'RelativeTargetDirectory', relativeTargetDir: '']
                             [$class: 'LocalBranch', localBranch: "**"]
                         ],
                         submoduleCfg: [],
