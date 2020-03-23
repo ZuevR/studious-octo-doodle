@@ -9,7 +9,7 @@ pipeline {
                         throw new Exception("tagToCreate field is missing, please check")
                     }
 
-                    if ("${WORK_BRANCH}" == "dev") {
+                    if ("${WORK_BRANCH}" == "development") {
                         env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-nodebb-dev"
                     } else if ("${WORK_BRANCH}" == "qa") {
                         env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-nodebb-qa"
