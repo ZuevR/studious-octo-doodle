@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Prepare ENV') {
+            steps {
+                script {
+                    if ("${tagToCreate}".isEmpty()) {
+                        throw new Exception("tagToCreate field is missing, please check")
+                    }
+
+                    if ("${WORK_BRANCH}" == "develop") {
+                        env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-nodebb-dev"
+                    } else if ("${WORK_BRANCH}" == "qa") {
+                        env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-nodebb-qa"
+                    } else if ("${WORK_BRANCH}" == "uat") {
+                        env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-nodebb-uat"
+                    } else if ("${WORK_BRANCH}" == "prod") {
+                        env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-nodebb-pre-prod"
+                    } else {
+                        echo "WORK_BRANCH field is missing, please check"
+                        exit 1
+                    }
+                }
+            }
+        }
+
+        stage('Set tags') {
+            steps {
+                dir('src') {
+                    checkout([$class: 'GitSCM',
+                        branches: [[name: '*/${WORK_BRANCH}']],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [[$class: 'WipeWorkspace']],
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[credentialsId: "${GIT_CREDS}",
+                        url: 'git@github.com:funi-main/funimation-nodebb.git']]
+                    ])
+
+                    sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
+                    //sshagent(["${GIT_CREDS}"]) {
+                    //   sh "git@github.com:funi-main/funimation-nodebb.git ${JGIT_TAG}"
+                    //}
+                }
+            }
+        }
+    }
+}
