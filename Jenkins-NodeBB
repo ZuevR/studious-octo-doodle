@@ -87,7 +87,6 @@ pipeline {
 
                 sh '''#!/bin/bash
                 docker build \
-                --pull \
                 --cache-from ${DOCKER_BUILD}:latest \
                 -t ${DOCKER_BUILD}:latest \
                 -t ${DOCKER_BUILD}:${JGIT_TAG} \
