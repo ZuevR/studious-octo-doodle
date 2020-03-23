@@ -88,7 +88,6 @@ pipeline {
                 sh '''#!/bin/bash
                 docker build \
                 --cache-from ${DOCKER_BUILD}:latest \
-                -t ${DOCKER_BUILD}:latest \
                 -t ${DOCKER_BUILD}:${JGIT_TAG} \
                 -f Dockerfile source2-main/nodebb
                 #docker push ${DOCKER_BUILD}:latest
