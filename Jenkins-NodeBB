@@ -64,5 +64,30 @@ pipeline {
                 }
             }
         }
+
+        stage('Build') {
+            steps {
+                sh ''' #!/bin/bash
+                sed -i "s/BUILD_NUMBER_PLACEHOLDER/${BUILD_NUMBER}/g" source2-main/nodebb/Dockerfile
+                sed -i "s/JENKINS_JOB_NAME_PLACEHOLDER/${JOB_NAME}/g" source2-main/nodebb/Dockerfile
+                sed -i "s/GIT_TAG_PLACEHOLDER/${JGIT_TAG:-Untagged}/g" source2-main/nodebb/Dockerfile
+                sed -i "s/GIT_BRANCH_PLACEHOLDER/${WORK_BRANCH}/g" source2-main/nodebb/Dockerfile
+
+                $(aws ecr get-login --region=us-west-2 --no-include-email)
+
+                rm -rf source2-main/nodebb/nodebb
+                mv forum source2-main/nodebb/nodebb
+
+
+                '''
+                script {
+                    if ("${WORK_BRANCH}" == "qa") {
+                        env.WORK_BRANCH = "pre-prod"
+                    }
+                }
+
+                sh 'echo $WORK_BRANCH'
+            }
+        }
     }
 }
