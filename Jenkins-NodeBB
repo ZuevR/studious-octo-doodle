@@ -9,7 +9,7 @@ pipeline {
                         throw new Exception("tagToCreate field is missing, please check")
                     }
 
-                    if ("${WORK_BRANCH}" == "develop") {
+                    if ("${WORK_BRANCH}" == "dev") {
                         env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-nodebb-dev"
                     } else if ("${WORK_BRANCH}" == "qa") {
                         env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-nodebb-qa"
@@ -37,7 +37,7 @@ pipeline {
                         url: 'git@github.com:funi-main/funimation-nodebb.git']]
                     ])
 
-                    //sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
+                    sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
                     //sshagent(["${GIT_CREDS}"]) {
                     //   sh "git@github.com:funi-main/funimation-nodebb.git ${JGIT_TAG}"
                     //}
