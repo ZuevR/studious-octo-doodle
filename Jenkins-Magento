@@ -22,18 +22,10 @@ pipeline {
 
         stage('Pull the code') {
             steps {
-                dir('funimation-magento') {
-                    git branch: "${WORK_BRANCH}",
-                    credentialsId: "${GIT_CREDS}",
-                    url: 'git@github.com:funi-main/funimation-magento.git'
-                    sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
-                    //sshagent(["${GIT_CREDS}"]) {
-                    //    sh "git push git@github.com:funi-main/funimation-magento.git ${JGIT_TAG}"
-                    //}
-                }
+
 
                 dir('source2-main') {
-                    git branch: '*/venue',
+                    git branch: "*/venue",
                     credentialsId: "${GIT_CREDS}",
                     url: 'git@github.com:funi-main/source2-main.git'
                     //sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
