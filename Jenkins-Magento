@@ -42,7 +42,19 @@ pipeline {
                     //}
                 }
 
-
+                dir('main') {
+                    checkout([$class: 'GitSCM',
+                        branches: [[name: '*/venue']],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [
+                            [$class: 'RelativeTargetDirectory', relativeTargetDir: 'main'],
+                            [$class: 'LocalBranch', localBranch: "**"]
+                          ],
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[credentialsId: "${GIT_CREDS}",
+                        url: 'git@github.com:funi-main/source2-main.git']]
+                    ])
+                }
             }
         }
     }
