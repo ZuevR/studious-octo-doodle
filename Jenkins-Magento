@@ -22,7 +22,7 @@ pipeline {
 
         stage('Pull the code') {
             steps {
-                dir('src') {
+                dir('funimation-magento') {
                     git branch: "${WORK_BRANCH}",
                     credentialsId: "${GIT_CREDS}",
                     url: 'git@github.com:funi-main/funimation-magento.git'
@@ -31,14 +31,26 @@ pipeline {
                     //    sh "git push git@github.com:funi-main/funimation-magento.git ${JGIT_TAG}"
                     //}
                 }
-            }
-        }
 
-        stage('asd') {
-            steps {
-                 ws('asd') {
-                    sh 'echo $WORKSPACE'
-                 }
+                dir('source2-main') {
+                    git branch: '*/venue',
+                    credentialsId: "${GIT_CREDS}",
+                    url: 'git@github.com:funi-main/source2-main.git'
+                    sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
+                }
+
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: "*/${WORK_BRANCH}"]],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [
+                        [$class: 'RelativeTargetDirectory', relativeTargetDir: 'magento-store']
+                    ],
+                    submoduleCfg: [],
+                    userRemoteConfigs: [
+                        [credentialsId: 'bebop-funigit', url: 'git@github.com:funi-main/funimation-magento.git']
+                    ]
+                ])
             }
         }
     }
