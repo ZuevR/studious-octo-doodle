@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'master' }
+    agent { label 'venue-ci-spot-store' }
 
     stages {
         stage('Prepare ENV') {
@@ -31,6 +31,14 @@ pipeline {
                     //    sh "git push git@github.com:funi-main/funimation-magento.git ${JGIT_TAG}"
                     //}
                 }
+            }
+        }
+
+        stage('asd') {
+            steps {
+                 ws('asd') {
+                    sh 'echo $WORKSPACE'
+                 }
             }
         }
     }
