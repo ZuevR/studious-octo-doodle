@@ -1,0 +1,26 @@
+pipeline {
+    agent { label 'venue-ci-spot-store' }
+
+    stages {
+        stage('Prepare ENV') {
+            steps {
+                script {
+                    if ("${tagToCreate}".isEmpty()) {
+                        throw new Exception("tagToCreate field is missing, please check")
+                    }
+                }
+            }
+        }
+
+        stage('Pull the code') {
+            steps {
+                dir('src') {
+                    git branch: "${WORK_BRANCH}",
+                    credentialsId: "${GIT_CREDS}",
+                    url: 'git@github.com:funi-main/funimation-magento.git'
+                }
+
+            }
+        }
+    }
+}
