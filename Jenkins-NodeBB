@@ -41,7 +41,7 @@ pipeline {
 
                     sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
                     //sshagent(["${GIT_CREDS}"]) {
-                    //   sh "git@github.com:funi-main/funimation-nodebb.git ${JGIT_TAG}"
+                    //   sh "git push git@github.com:funi-main/funimation-nodebb.git ${JGIT_TAG}"
                     //}
                 }
 
