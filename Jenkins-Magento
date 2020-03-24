@@ -25,36 +25,13 @@ pipeline {
 
 
                 dir('source2-main') {
-
-
-                    checkout([$class: 'GitSCM',
-                        branches: [[name: '*/venue']],
-                        doGenerateSubmoduleConfigurations: false,
-                        submoduleCfg: [],
-                        userRemoteConfigs: [
-                            [credentialsId: "${GIT_CREDS}", url: 'git@github.com:funi-main/source2-main.git']
-                        ]
-                    ])
-
-                    sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
-                    //sshagent(["${GIT_CREDS}"]) {
-                    //   sh "git push git@github.com:funi-main/funimation-nodebb.git ${JGIT_TAG}"
-                    //}
+                    git branch: "venue",
+                    credentialsId: "${GIT_CREDS}",
+                    url: 'git@github.com:funi-main/source2-main.git'
+                    //sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
                 }
 
-                dir('main') {
-                    checkout([$class: 'GitSCM',
-                        branches: [[name: '*/venue']],
-                        doGenerateSubmoduleConfigurations: false,
-                        extensions: [
-                            [$class: 'RelativeTargetDirectory', relativeTargetDir: 'main'],
-                            [$class: 'LocalBranch', localBranch: "**"]
-                          ],
-                        submoduleCfg: [],
-                        userRemoteConfigs: [[credentialsId: "${GIT_CREDS}",
-                        url: 'git@github.com:funi-main/source2-main.git']]
-                    ])
-                }
+
             }
         }
     }
