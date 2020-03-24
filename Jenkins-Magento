@@ -39,18 +39,7 @@ pipeline {
                     //sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
                 }
 
-                /*checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: "*/${WORK_BRANCH}"]],
-                    doGenerateSubmoduleConfigurations: false,
-                    extensions: [
-                        [$class: 'RelativeTargetDirectory', relativeTargetDir: 'magento-store']
-                    ],
-                    submoduleCfg: [],
-                    userRemoteConfigs: [
-                        [credentialsId: 'bebop-funigit', url: 'git@github.com:funi-main/funimation-magento.git']
-                    ]
-                ])*/
+
             }
         }
     }
