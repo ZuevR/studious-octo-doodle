@@ -85,7 +85,7 @@ pipeline {
                     }
                 }
 
-                /*sh '''#!/bin/bash
+                sh '''#!/bin/bash
                 docker build \
                 --pull \
                 --cache-from ${DOCKER_BUILD}:latest \
@@ -94,7 +94,7 @@ pipeline {
                 -f source2-main/nodebb/Dockerfile ./source2-main/nodebb
                 #docker push ${DOCKER_BUILD}:latest
                 #docker push ${DOCKER_BUILD}:${JGIT_TAG}
-                ''' */
+                '''
             }
         }
 
@@ -123,5 +123,7 @@ pipeline {
                 '''
             }
         }
+
+       cleanWs()
     }
 }
