@@ -36,10 +36,10 @@ pipeline {
                     git branch: '*/venue',
                     credentialsId: "${GIT_CREDS}",
                     url: 'git@github.com:funi-main/source2-main.git'
-                    sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
+                    //sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
                 }
 
-                checkout([
+                /*checkout([
                     $class: 'GitSCM',
                     branches: [[name: "*/${WORK_BRANCH}"]],
                     doGenerateSubmoduleConfigurations: false,
@@ -50,7 +50,7 @@ pipeline {
                     userRemoteConfigs: [
                         [credentialsId: 'bebop-funigit', url: 'git@github.com:funi-main/funimation-magento.git']
                     ]
-                ])
+                ])*/
             }
         }
     }
