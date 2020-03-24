@@ -26,8 +26,9 @@ pipeline {
 
                 dir('source2-main') {
 
+
                     checkout([$class: 'GitSCM',
-                        branches: [[name: '*/${venue}']],
+                        branches: [[name: '*/venue']],
                         doGenerateSubmoduleConfigurations: false,
                         submoduleCfg: [],
                         userRemoteConfigs: [
