@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'master' }
+    agent any
 
     stages {
         stage('Prepare ENV') {
@@ -157,7 +157,7 @@ pipeline {
             }
             steps {
                 ws('docker-base-ws') {
-                    sh 'cp -rf /var/lib/jenkins/jobs/"${JOB_NAME}"/workspace/* $WORKSPACE'
+                    sh 'cp -rf /var/lib/jenkins/workspace/"${JOB_NAME}"/* $WORKSPACE'
 
                     timestamps {
                         ansiColor('xterm') {
@@ -176,14 +176,14 @@ pipeline {
                             cp local_settings_client.py lib/code/source/source_client/local_settings.py
                             '''
 
-                            sh '''#!/bin/bash
+                            /*sh '''#!/bin/bash
                             docker build \
                             -t ${DOCKER_BASE_COND}:latest \
                             -t ${DOCKER_BASE_COND}:${JGIT_TAG} \
                             -f BaseDockerfile .
                             #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:latest
                             #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:${JGIT_TAG}
-                            '''
+                            ''' */
                         }
                     }
                 }
@@ -196,7 +196,7 @@ pipeline {
             }
             steps {
                 ws('migration-ws') {
-                    sh 'cp -rf /var/lib/jenkins/jobs/"${JOB_NAME}"/workspace/* $WORKSPACE'
+                    sh 'cp -rf /var/lib/jenkins/workspace/"${JOB_NAME}"/* $WORKSPACE'
 
                     timestamps {
                         ansiColor('xterm') {
@@ -229,7 +229,7 @@ pipeline {
                             '''
 
 
-                            sh '''#!/bin/bash
+                            /*sh '''#!/bin/bash
                             docker build \
                             -t ${DOCKER_BUILD_MIGRATION}:${JGIT_TAG}-migration \
                             -f Dockerfile .
@@ -265,9 +265,7 @@ pipeline {
                             sed -i "s~DBPASSWORD~DBROOTPASSWORD~g" /code/source/source/local_settings.py && \
                             ./manage.py migrate --noinput'
                             fi
-
-                            '''
-
+                            '''*/
                         }
                     }
 
@@ -285,7 +283,7 @@ pipeline {
                     }
                     steps {
                         ws('backend-api-ws') {
-                            sh 'cp -rf /var/lib/jenkins/jobs/"${JOB_NAME}"/workspace/* $WORKSPACE'
+                            sh 'cp -rf /var/lib/jenkins/workspace/"${JOB_NAME}"/* $WORKSPACE'
 
                             // think should work
                             //step([
@@ -375,7 +373,7 @@ pipeline {
                    }
                     steps {
                         ws('backend-cms-ws') {
-                            sh 'cp -rf /var/lib/jenkins/jobs/"${JOB_NAME}"/workspace/* $WORKSPACE'
+                            sh 'cp -rf /var/lib/jenkins/workspace/"${JOB_NAME}"/* $WORKSPACE'
 
                             // think should work
                             //step([
@@ -474,7 +472,7 @@ pipeline {
                    }
                     steps {
                         ws('backend-rqworkers-ws') {
-                            sh 'cp -rf /var/lib/jenkins/jobs/"${JOB_NAME}"/workspace/* $WORKSPACE'
+                            sh 'cp -rf /var/lib/jenkins/workspace/"${JOB_NAME}"/* $WORKSPACE'
 
                             // think should work
                             //step([
