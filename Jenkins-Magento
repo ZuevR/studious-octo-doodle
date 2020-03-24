@@ -8,6 +8,12 @@ pipeline {
                     if ("${tagToCreate}".isEmpty()) {
                         throw new Exception("tagToCreate field is missing, please check")
                     }
+
+                    env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-mag-${WORK_BRANCH}"
+
+                    if ("${WORK_BRANCH}" == "develop") {
+                        env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-mag-dev"
+                    }
                 }
             }
         }
@@ -18,8 +24,11 @@ pipeline {
                     git branch: "${WORK_BRANCH}",
                     credentialsId: "${GIT_CREDS}",
                     url: 'git@github.com:funi-main/funimation-magento.git'
+                    sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
+                    //sshagent(["${GIT_CREDS}"]) {
+                    //    sh "git push git@github.com:funi-main/funimation-magento.git ${JGIT_TAG}"
+                    //}
                 }
-
             }
         }
     }
