@@ -30,6 +30,8 @@ pipeline {
                     //}
                 }
 
+                sh 'pwd'
+
                 checkout([
                     $class: 'GitSCM',
                     branches: [[name: '*/venue']],
