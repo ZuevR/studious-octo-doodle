@@ -29,7 +29,7 @@ pipeline {
                     //    sh "git push git@github.com:funi-main/kane-funimation-v2.git ${JGIT_TAG}"
                     //}
                 }*/
-
+                dir('asd') {
                 checkout([
                     $class: 'GitSCM',
                     branches: [[name: '*/venue']],
@@ -43,6 +43,7 @@ pipeline {
                         [credentialsId: 'bebop-funigit', url: 'git@github.com:funi-main/source2-main.git']
                     ]
                 ])
+                }
 
                 //sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
 
