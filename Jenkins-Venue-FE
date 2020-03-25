@@ -50,19 +50,7 @@ pipeline {
                 //    sh "git push git@github.com:funi-main/source2-main.git ${JGIT_TAG}"
                 //}
 
-                /*checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: '*/master']],
-                    doGenerateSubmoduleConfigurations: false,
-                    extensions: [
-                        [$class: 'RelativeTargetDirectory', relativeTargetDir: 'geoip'],
-                        [$class: 'LocalBranch', localBranch: "**"]
-                    ],
-                    submoduleCfg: [],
-                    userRemoteConfigs: [
-                        [credentialsId: 'bebop-funigit', url: 'git@github.com:maxmind/geoipupdate.git']
-                    ]
-                ])*/
+
             }
 
         }
