@@ -35,7 +35,7 @@ pipeline {
                     branches: [[name: '*/venue']],
                     doGenerateSubmoduleConfigurations: false,
                     extensions: [
-                        [$class: 'SparseCheckoutPaths', sparseCheckoutPaths: [[path: 'frontend'], [path: 'maintenance']]],
+                        [$class: 'SparseCheckoutPaths', sparseCheckoutPaths: [[path: 'frontend/'], [path: 'maintenance/']]],
                         [$class: 'LocalBranch', localBranch: "**"]
                     ],
                     submoduleCfg: [],
