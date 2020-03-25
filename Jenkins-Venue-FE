@@ -74,7 +74,7 @@ pipeline {
                 timestamps {
                     ansiColor('xterm') {
                         sh ''' #!/bin/bash
-                        sed -i "s/BUILD_NUMBER_PLACEHOLDER/c{BUILD_NUMBER}/g" source2-main/frontend/Dockerfile
+                        sed -i "s/BUILD_NUMBER_PLACEHOLDER/${BUILD_NUMBER}/g" source2-main/frontend/Dockerfile
                         sed -i "s/JENKINS_JOB_NAME_PLACEHOLDER/${JOB_NAME}/g" source2-main/frontend/Dockerfile
                         sed -i "s/GIT_TAG_PLACEHOLDER/${JGIT_TAG:-Untagged}/g" source2-main/frontend/Dockerfile
                         sed -i "s/GIT_BRANCH_PLACEHOLDER/${WORK_BRANCH}/g" source2-main/frontend/Dockerfile
@@ -110,7 +110,6 @@ pipeline {
                     }
                 }
 
-                // think should work
                 //step([
                 //    $class: 'DsbNotificationBuilder',
                 //    extensions: [
@@ -159,6 +158,17 @@ pipeline {
                         ''' */
                     }
                 }
+
+                //step([
+                //    $class: 'DsbNotificationBuilder',
+                //    extensions: [
+                //        [
+                //            $class: 'ProfileNotifier',
+                //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Name Branch: ${APP_ENV} BuildNum: ${BUILD_NUMBER} - DEPLOYED TO AWS",
+                //            name: 'GS Venue DSB'
+                //        ]
+                //    ]
+                //])
             }
         }
     }
