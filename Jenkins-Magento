@@ -89,36 +89,6 @@ pipeline {
                         composer install
                         chmod +x bin/magento
 
-                        # /build/magento is located in an EFS, so it is accesible from any instance, it is automatically mounted on the Jenkins Store Slaves and the Magento Instances
-                        cp /build/magento/shared/magento-environments/env-${GIT_BRANCH}.php app/etc/env.php
-                        #Disabling the PEM file, the user need to provide password
-                        #cp /build/magento/shared/magento-environments/funimation-integration.pem app/code/Born/Feed/funimation-integration.pem
-
-                        rm -rf /var/www/html/store/var/di /var/www/html/store/var/generation /var/www/html/store/var/cache
-
-                        if [ "$GIT_BRANCH" = "uat" ] || [ "$GIT_BRANCH" = "pre-prod" ]
-                        then
-                            bin/magento deploy:mode:set production
-                            bin/magento setup:upgrade
-                            bin/magento setup:di:compile
-                            bin/magento setup:static-content:deploy
-                            bin/magento cache:enable
-                            bin/magento cache:clean
-                            bin/magento cache:flush
-                            bin/magento indexer:reindex
-                            bin/magento maintenance:disable
-                        else
-                            php bin/magento deploy:mode:set developer
-                            php bin/magento setup:upgrade
-                        	php bin/magento setup:di:compile
-                             php bin/magento setup:static-content:deploy
-                            php bin/magento cache:enable
-                            php bin/magento cache:clean
-                        	php bin/magento cache:flush
-                        	php bin/magento indexer:reindex
-                        	php bin/magento maintenance:disable
-                        fi
-
                         '''
                     }
                 }
