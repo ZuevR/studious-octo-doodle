@@ -88,6 +88,7 @@ pipeline {
                         export AWS_DEFAULT_REGION=us-west-2
 
                         mv source2-main/frontend/* ./
+                        mv source2-main/maintenance ./
 
                         if [ $WORK_BRANCH = "development" ]; then
                         rm nginx_site.conf
@@ -121,15 +122,43 @@ pipeline {
                 //    ]
                 //])
 
-                /*sh '''#!/bin/bash
-                #docker build \
-                #--pull \
-                #-t ${ECR_URL}/venue-fe-${APP_ENV}:latest \
-                #-t ${ECR_URL}/venue-fe-${APP_ENV}:${JGIT_TAG} \
-                #-f Dockerfile .
+                sh '''#!/bin/bash
+                docker build \
+                --pull \
+                -t ${ECR_URL}/venue-fe-${APP_ENV}:latest \
+                -t ${ECR_URL}/venue-fe-${APP_ENV}:${JGIT_TAG} \
+                -f Dockerfile .
                 #docker push ${ECR_URL}/venue-fe-${APP_ENV}:latest
                 #docker push ${ECR_URL}/venue-fe-${APP_ENV}:${JGIT_TAG}
-                '''*/
+                '''
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                timestamps {
+                    ansiColor('xterm') {
+                        /*sh ''' #!/bin/bash
+                        if [ $Environment = "development" ]; then
+                        ecs deploy VENUE-DEV frontend -t ${JGIT_TAG} --region us-west-2 --timeout -1 || true
+                        fi
+
+                        if [ $APP_ENV = "qa" ]; then
+                        ecs deploy VENUE-QA frontend -t ${JGIT_TAG} --region us-west-2 --timeout -1 || true
+                        aws cloudfront create-invalidation --distribution-id E1ZBXWVSWIFZWF --paths "/*"
+                        fi
+
+                        if [ $APP_ENV = "uat" ]; then
+                        ecs deploy VENUE-UAT frontend -t ${JGIT_TAG} --region us-west-2 --timeout -1 || true
+                        aws cloudfront create-invalidation --distribution-id E69IIBXD85V2Y --paths "/*"
+                        fi
+
+                        if [ $APP_ENV = "pre-prod" ]; then
+                        ecs deploy VENUE-PRE-PROD frontend -t ${JGIT_TAG} --region us-west-2 --timeout -1 || true
+                        fi
+                        ''' */
+                    }
+                }
             }
         }
     }
