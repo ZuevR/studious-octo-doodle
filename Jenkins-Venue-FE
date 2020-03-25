@@ -20,7 +20,7 @@ pipeline {
 
         stage('Set tags') {
             steps {
-                dir('src') {
+                /*dir('src') {
                     git branch: "${WORK_BRANCH}",
                     credentialsId: "${GIT_CREDS}",
                     url: 'git@github.com:funi-main/kane-funimation-v2.git'
@@ -28,9 +28,7 @@ pipeline {
                     //sshagent(["${GIT_CREDS}"]) {
                     //    sh "git push git@github.com:funi-main/kane-funimation-v2.git ${JGIT_TAG}"
                     //}
-                }
-
-                sh 'pwd'
+                }*/
 
                 checkout([
                     $class: 'GitSCM',
@@ -46,7 +44,7 @@ pipeline {
                     ]
                 ])
 
-                sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
+                /*sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
 
                 //sshagent(["${GIT_CREDS}"]) {
                 //    sh "git push git@github.com:funi-main/source2-main.git ${JGIT_TAG}"
@@ -64,7 +62,7 @@ pipeline {
                     userRemoteConfigs: [
                         [credentialsId: 'bebop-funigit', url: 'git@github.com:maxmind/geoipupdate.git']
                     ]
-                ])
+                ])*/
             }
 
         }
@@ -123,7 +121,7 @@ pipeline {
                 //    ]
                 //])
 
-                sh '''#!/bin/bash
+                /*sh '''#!/bin/bash
                 docker build \
                 --pull \
                 -t ${ECR_URL}/venue-fe-${APP_ENV}:latest \
@@ -131,7 +129,7 @@ pipeline {
                 -f BaseDockerfile .
                 #docker push ${ECR_URL}/venue-fe-${APP_ENV}:latest
                 #docker push ${ECR_URL}/venue-fe-${APP_ENV}:${JGIT_TAG}
-                '''
+                '''*/
             }
         }
     }
