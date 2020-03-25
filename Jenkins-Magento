@@ -84,8 +84,8 @@ pipeline {
                         sh ''' #!/bin/bash
                         #!/bin/bash -x
                         export HOME=${JENKINS_HOME}
-                        rm -rf venue-maintenance
-                        cd magento-store/
+                        rm -rf source2-main/venue-maintenance
+                        cd source2-main/magento-store/
                         composer install
                         chmod +x bin/magento
 
