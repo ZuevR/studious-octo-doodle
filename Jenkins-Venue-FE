@@ -27,8 +27,7 @@ pipeline {
                     url: 'git@github.com:funi-main/source2-main.git'
                     //sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
                     sshagent(["${GIT_CREDS}"]) {
-                    //    sh "git push git@github.com:funi-main/kane-funimation-v2.git ${JGIT_TAG}"
-                        sh 'git fetch'
+                        sh "git fetch"
                     }
                 }
 
