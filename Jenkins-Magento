@@ -40,7 +40,7 @@ pipeline {
             }
         }
 
-        stage('Notification') {
+        stage('Pre-notification') {
             steps {
                 sh 'echo "Notification"'
                 // think should work
@@ -92,10 +92,113 @@ pipeline {
                         #/build/magento is located in an EFS, so it is accesible from any instance, it is automatically mounted on the Jenkins Store Slaves and the Magento Instances
                         cp /build/magento/shared/magento-environments/env-${WORK_BRANCH}.php app/etc/env.php
 
+                        #if [ "$GIT_BRANCH" = "uat" ] || [ "$GIT_BRANCH" = "pre-prod" ]
+                        #then
+                            #bin/magento deploy:mode:set production
+                            #bin/magento setup:upgrade
+                            #bin/magento setup:di:compile
+                            #bin/magento setup:static-content:deploy
+                            #bin/magento cache:enable
+                            #bin/magento cache:clean
+                            #bin/magento cache:flush
+                            #bin/magento indexer:reindex
+                            #bin/magento maintenance:disable
+                        #else
+                            #php bin/magento deploy:mode:set developer
+                            #php bin/magento setup:upgrade
+                        	#php bin/magento setup:di:compile
+                            #php bin/magento setup:static-content:deploy
+                            #php bin/magento cache:enable
+                            #php bin/magento cache:clean
+                        	#php bin/magento cache:flush
+                        	#php bin/magento indexer:reindex
+                        	#php bin/magento maintenance:disable
+                        #fi
                         '''
                     }
                 }
             }
         }
+
+        stage('Post-notification') {
+            steps {
+                sh 'echo "Notification"'
+                // think should work
+                //step([
+                //    $class: 'DsbNotificationBuilder',
+                //    extensions: [
+                //        [
+                //            $class: 'ProfileNotifier',
+                //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - DEPLOYING MAGENTO IN AWS ASG",
+                //            name: 'Magento DEV'
+                //        ]
+                //    ]
+                //])
+
+                //step([
+                //    $class: 'DsbNotificationBuilder',
+                //    extensions: [
+                //        [
+                //            $class: 'ProfileNotifier',
+                //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - DEPLOYING MAGENTO IN AWS ASG",
+                //            name: 'GS Venue DSB'
+                //        ]
+                //    ]
+                //])
+
+                //step([
+                //    $class: 'DsbNotificationBuilder',
+                //    extensions: [
+                //        [
+                //            $class: 'ProfileNotifier',
+                //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - DEPLOYED MAGENTO IN AWS ASG",
+                //            name: 'Magento DEV'
+                //        ]
+                //    ]
+                //])
+
+                //step([
+                //    $class: 'DsbNotificationBuilder',
+                //    extensions: [
+                //        [
+                //            $class: 'ProfileNotifier',
+                //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - DEPLOYED MAGENTO IN AWS ASG",
+                //            name: 'GS Venue DSB'
+                //        ]
+                //    ]
+                //])
+
+            }
+        }
+
+        stage('Deploy to AWS CodeDeploy') {
+            /*steps {
+                step([
+                    $class: 'AWSCodeDeployPublisher',
+                    applicationName: 'VENUE-STORE-${WORK_BRANCH}',
+                    awsAccessKey: 'AKIAJRXXRVLQRDEYF2JA',
+                    awsSecretKey: 'XXXX',
+                    credentials: 'awsAccessKey',
+                    deploymentConfig: 'CodeDeployDefault.OneAtATime',
+                    deploymentGroupAppspec: false,
+                    deploymentGroupName: '${WORK_BRANCH}',
+                    deploymentMethod: 'deploy',
+                    excludes: '',
+                    iamRoleArn: '',
+                    includes: '**',
+                    pollingFreqSec: 60,
+                    pollingTimeoutSec: 1000,
+                    proxyHost: '',
+                    proxyPort: 0,
+                    region: 'us-west-2',
+                    s3bucket: 'magento-build-storage',
+                    s3prefix: '${WORK_BRANCH}_${BUILD_NUMBER}',
+                    subdirectory: '',
+                    versionFileName: '',
+                    waitForCompletion: true
+                ])
+            }*/
+        }
+
     }
 }
