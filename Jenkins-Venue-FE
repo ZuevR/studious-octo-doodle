@@ -89,17 +89,17 @@ pipeline {
 
                         mv source2-main/frontend/* ./
 
-                        if [ $WORK_BRANCH == "development" ]; then
+                        if [ $WORK_BRANCH = "development" ]; then
                         rm nginx_site.conf
                         mv nginx-redirect.conf nginx_site.conf
                         fi
 
-                        if [ $WORK_BRANCH == "qa" ]; then
+                        if [ $WORK_BRANCH = "qa" ]; then
                         rm nginx_site.conf
                         mv nginx-redirect.conf nginx_site.conf
                         fi
 
-                        if [ $WORK_BRANCH == "stage" ]; then
+                        if [ $WORK_BRANCH = "stage" ]; then
                         rm nginx_site.conf
                         mv nginx-redirect.conf nginx_site.conf
                         fi
@@ -122,11 +122,11 @@ pipeline {
                 //])
 
                 /*sh '''#!/bin/bash
-                docker build \
-                --pull \
-                -t ${ECR_URL}/venue-fe-${APP_ENV}:latest \
-                -t ${ECR_URL}/venue-fe-${APP_ENV}:${JGIT_TAG} \
-                -f Dockerfile .
+                #docker build \
+                #--pull \
+                #-t ${ECR_URL}/venue-fe-${APP_ENV}:latest \
+                #-t ${ECR_URL}/venue-fe-${APP_ENV}:${JGIT_TAG} \
+                #-f Dockerfile .
                 #docker push ${ECR_URL}/venue-fe-${APP_ENV}:latest
                 #docker push ${ECR_URL}/venue-fe-${APP_ENV}:${JGIT_TAG}
                 '''*/
