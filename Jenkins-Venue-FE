@@ -50,5 +50,4 @@ pipeline {
     }
 }
 
-//checkout([$class: 'GitSCM', branches: [[name: '*/venue']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'SparseCheckoutPaths', sparseCheckoutPaths: [[path: 'frontend'], [path: 'maintenance']]]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'bebop-funigit', url: 'git@github.com:funi-main/source2-main.git']]])
 
