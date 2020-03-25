@@ -21,7 +21,7 @@ pipeline {
         stage('Set tags') {
             steps {
                 dir('src') {
-                    git branch: "{WORK_BRANCH}",
+                    git branch: "${WORK_BRANCH}",
                     credentialsId: "${GIT_CREDS}",
                     url: 'git@github.com:funi-main/kane-funimation-v2.git'
                     sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
