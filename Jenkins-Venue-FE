@@ -65,70 +65,71 @@ pipeline {
                 ])
             }
 
-            stage('Build') {
-                steps {
-                    timestamps {
-                        ansiColor('xterm') {
-                            sh ''' #!/bin/bash
-                            sed -i "s/BUILD_NUMBER_PLACEHOLDER/c{BUILD_NUMBER}/g" frontend/Dockerfile
-                            sed -i "s/JENKINS_JOB_NAME_PLACEHOLDER/${JOB_NAME}/g" frontend/Dockerfile
-                            sed -i "s/GIT_TAG_PLACEHOLDER/${JGIT_TAG:-Untagged}/g" frontend/Dockerfile
-                            sed -i "s/GIT_BRANCH_PLACEHOLDER/${WORK_BRANCH}/g" frontend/Dockerfile
-                            '''
+        }
 
-                            sh 'cp -r maintenance src/kane'
+        stage('Build') {
+            steps {
+                timestamps {
+                    ansiColor('xterm') {
+                        sh ''' #!/bin/bash
+                        sed -i "s/BUILD_NUMBER_PLACEHOLDER/c{BUILD_NUMBER}/g" frontend/Dockerfile
+                        sed -i "s/JENKINS_JOB_NAME_PLACEHOLDER/${JOB_NAME}/g" frontend/Dockerfile
+                        sed -i "s/GIT_TAG_PLACEHOLDER/${JGIT_TAG:-Untagged}/g" frontend/Dockerfile
+                        sed -i "s/GIT_BRANCH_PLACEHOLDER/${WORK_BRANCH}/g" frontend/Dockerfile
+                        '''
+
+                        sh 'cp -r maintenance src/kane'
 
 
-                            sh ''' #!/bin/bash
-                            #!/bin/bash
-                            ( find . -type d -name ".git" && find . -name ".gitignore" && find . -name ".gitmodules" ) | xargs rm -rf
-                            export AWS_DEFAULT_REGION=us-west-2
+                        sh ''' #!/bin/bash
+                        #!/bin/bash
+                        ( find . -type d -name ".git" && find . -name ".gitignore" && find . -name ".gitmodules" ) | xargs rm -rf
+                        export AWS_DEFAULT_REGION=us-west-2
 
-                            mv frontend/* ./
+                        mv frontend/* ./
 
-                            if [ $WORK_BRANCH == "development" ]; then
-                            rm nginx_site.conf
-                            mv nginx-redirect.conf nginx_site.conf
-                            fi
+                        if [ $WORK_BRANCH == "development" ]; then
+                        rm nginx_site.conf
+                        mv nginx-redirect.conf nginx_site.conf
+                        fi
 
-                            if [ $WORK_BRANCH == "qa" ]; then
-                            rm nginx_site.conf
-                            mv nginx-redirect.conf nginx_site.conf
-                            fi
+                        if [ $WORK_BRANCH == "qa" ]; then
+                        rm nginx_site.conf
+                        mv nginx-redirect.conf nginx_site.conf
+                        fi
 
-                            if [ $WORK_BRANCH == "stage" ]; then
-                            rm nginx_site.conf
-                            mv nginx-redirect.conf nginx_site.conf
-                            fi
+                        if [ $WORK_BRANCH == "stage" ]; then
+                        rm nginx_site.conf
+                        mv nginx-redirect.conf nginx_site.conf
+                        fi
 
-                            $(aws ecr get-login --region=us-west-2 --no-include-email)
+                        $(aws ecr get-login --region=us-west-2 --no-include-email)
 
-                            '''
-                        }
+                        '''
                     }
-
-                    // think should work
-                    //step([
-                    //    $class: 'DsbNotificationBuilder',
-                    //    extensions: [
-                    //        [
-                    //            $class: 'ProfileNotifier',
-                    //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Name Branch: ${APP_ENV} BuildNum: ${BUILD_NUMBER} - STARTED",
-                    //            name: 'GS Venue DSB'
-                    //        ]
-                    //    ]
-                    //])
-
-                    sh '''#!/bin/bash
-                    docker build \
-                    --pull \
-                    -t ${ECR_URL}/venue-fe-${APP_ENV}:latest \
-                    -t ${ECR_URL}/venue-fe-${APP_ENV}:${JGIT_TAG} \
-                    -f BaseDockerfile .
-                    #docker push ${ECR_URL}/venue-fe-${APP_ENV}:latest
-                    #docker push ${ECR_URL}/venue-fe-${APP_ENV}:${JGIT_TAG}
-                    '''
                 }
+
+                // think should work
+                //step([
+                //    $class: 'DsbNotificationBuilder',
+                //    extensions: [
+                //        [
+                //            $class: 'ProfileNotifier',
+                //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Name Branch: ${APP_ENV} BuildNum: ${BUILD_NUMBER} - STARTED",
+                //            name: 'GS Venue DSB'
+                //        ]
+                //    ]
+                //])
+
+                sh '''#!/bin/bash
+                docker build \
+                --pull \
+                -t ${ECR_URL}/venue-fe-${APP_ENV}:latest \
+                -t ${ECR_URL}/venue-fe-${APP_ENV}:${JGIT_TAG} \
+                -f BaseDockerfile .
+                #docker push ${ECR_URL}/venue-fe-${APP_ENV}:latest
+                #docker push ${ECR_URL}/venue-fe-${APP_ENV}:${JGIT_TAG}
+                '''
             }
         }
     }
