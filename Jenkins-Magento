@@ -43,6 +43,7 @@ pipeline {
 
         stage('Notification') {
             steps {
+                sh 'echo "Notification"'
                 // think should work
                 //step([
                 //    $class: 'DsbNotificationBuilder',
