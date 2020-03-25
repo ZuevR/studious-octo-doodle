@@ -68,7 +68,7 @@ pipeline {
             }
         }
 
-        stage('asd') {
+        stage('Config stage') {
             steps {
                 timestamps {
                     ansiColor('xterm') {
@@ -86,8 +86,11 @@ pipeline {
                         export HOME=${JENKINS_HOME}
                         rm -rf source2-main/venue-maintenance
                         cd source2-main/magento-store/
-                        composer install
+                        #composer install
                         chmod +x bin/magento
+
+                        # /build/magento is located in an EFS, so it is accesible from any instance, it is automatically mounted on the Jenkins Store Slaves and the Magento Instances
+                        cp /build/magento/shared/magento-environments/env-${GIT_BRANCH}.php app/etc/env.php
 
                         '''
                     }
