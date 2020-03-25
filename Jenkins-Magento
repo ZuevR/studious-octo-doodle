@@ -221,4 +221,11 @@ pipeline {
             }
         }
     }
+
+
+    post {
+        always {
+          cleanWs()
+        }
+    }
 }
