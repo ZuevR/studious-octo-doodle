@@ -9,7 +9,7 @@ pipeline {
                         throw new Exception("tagToCreate field is missing, please check")
                     }
 
-                    env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-fe-${WORK_BRANCH}"
+                    env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-fe-${Environment}"
 
                     if ("${Environment}" == "development") {
                         env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-fe-dev"
@@ -35,15 +35,22 @@ pipeline {
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [
                             [$class: 'SparseCheckoutPaths', sparseCheckoutPaths: [[path: 'frontend'], [path: 'maintenance']]],
-                            [$class: 'RelativeTargetDirectory', relativeTargetDir: 'asd']
+                            [$class: 'RelativeTargetDirectory', relativeTargetDir: 'source2-main'],
+                            [$class: 'LocalBranch', localBranch: "**"]
                         ],
                         submoduleCfg: [],
                         userRemoteConfigs: [
                             [credentialsId: 'bebop-funigit', url: 'git@github.com:funi-main/source2-main.git']
                         ]
                     ])
-
-                    sh 'pwd'
+                    sh '''#!/bin/bash
+                    cd source2-main
+                    git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"
+                    '''
+                    sshagent(["${GIT_CREDS}"]) {
+                        sh 'pwd'
+                    //    sh "git push git@github.com:funi-main/kane-funimation-v2.git ${JGIT_TAG}"
+                    }
                 }
             }
         }
