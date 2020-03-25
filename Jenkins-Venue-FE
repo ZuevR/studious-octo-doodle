@@ -9,9 +9,9 @@ pipeline {
                         throw new Exception("tagToCreate field is missing, please check")
                     }
 
-                    env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-fe-${Environment}"
+                    env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-fe-${APP_ENV}"
 
-                    if ("${Environment}" == "development") {
+                    if ("${APP_ENV}" == "development") {
                         env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-fe-dev"
                     }
                 }
