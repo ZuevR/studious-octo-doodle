@@ -170,8 +170,9 @@ pipeline {
         }
 
         stage('Deploy to AWS CodeDeploy') {
-            /*steps {
-                step([
+            steps {
+                sh 'echo "Deploy to AWS CodeDeploy"'
+                /*step([
                     $class: 'AWSCodeDeployPublisher',
                     applicationName: 'VENUE-STORE-${WORK_BRANCH}',
                     awsAccessKey: 'AKIAJRXXRVLQRDEYF2JA',
@@ -194,8 +195,8 @@ pipeline {
                     subdirectory: '',
                     versionFileName: '',
                     waitForCompletion: true
-                ])
-            }*/
+                ])*/
+            }
         }
 
         stage('Cron-Runner') {
