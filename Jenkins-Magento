@@ -22,16 +22,63 @@ pipeline {
 
         stage('Pull the code') {
             steps {
-
-
-                dir('source2-main') {
-                    git branch: "vntikoinortjnhopiue",
+                dir('magento-store') {
+                    git branch: "${WORK_BRANCH}",
                     credentialsId: "${GIT_CREDS}",
-                    url: 'git@github.com:funi-main/source2-main.git'
-                    //sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
+                    url: 'git@github.com:funi-main/funimation-magento.git'
+                    sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
+                    //sshagent(["${GIT_CREDS}"]) {
+                    //    sh "git push git@github.com:funi-main/funimation-magento.git ${JGIT_TAG}"
+                    //}
                 }
 
+                dir('source2-main') {
+                    git branch: 'venue',
+                    credentialsId: "${GIT_CREDS}",
+                    url: 'git@github.com:funi-main/source2-main.git'
+                    sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
+                }
+            }
+        }
 
+        stage('Notification') {
+            steps {
+                // think should work
+                //step([
+                //    $class: 'DsbNotificationBuilder',
+                //    extensions: [
+                //        [
+                //            $class: 'ProfileNotifier',
+                //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - BUILD STARTED",
+                //            name: 'Magento DEV'
+                //        ]
+                //    ]
+                //])
+
+                //step([
+                //    $class: 'DsbNotificationBuilder',
+                //    extensions: [
+                //        [
+                //            $class: 'ProfileNotifier',
+                //            message: "${JOB_NAME} - Tag: ${JGIT_TAG} Branch: ${WORK_BRANCH} BuildNum: ${BUILD_NUMBER} - BUILD STARTED",
+                //            name: 'GS Venue DSB'
+                //        ]
+                //    ]
+                //])
+            }
+        }
+
+        stage('asd') {
+            steps {
+                timestamps {
+                    ansiColor('xterm') {
+                        sh ''' #!/bin/bash
+                        export HOME=${JENKINS_HOME}
+                        composer clear-cache
+
+                        '''
+                    }
+                }
             }
         }
     }
