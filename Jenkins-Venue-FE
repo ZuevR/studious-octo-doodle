@@ -119,14 +119,15 @@ pipeline {
                     //    ]
                     //])
 
-                    /*sh '''#!/bin/bash
+                    sh '''#!/bin/bash
                     docker build \
+                    --pull \
                     -t ${ECR_URL}/venue-fe-${APP_ENV}:latest \
                     -t ${ECR_URL}/venue-fe-${APP_ENV}:${JGIT_TAG} \
                     -f BaseDockerfile .
                     #docker push ${ECR_URL}/venue-fe-${APP_ENV}:latest
                     #docker push ${ECR_URL}/venue-fe-${APP_ENV}:${JGIT_TAG}
-                    ''' */
+                    '''
                 }
             }
         }
