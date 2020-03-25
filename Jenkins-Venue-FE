@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Prepare ENV') {
+            steps {
+                script {
+                    if ("${tagToCreate}".isEmpty()) {
+                        throw new Exception("tagToCreate field is missing, please check")
+                    }
+
+                    env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-fe-${WORK_BRANCH}"
+
+                    if ("${Environment}" == "development") {
+                        env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-fe-dev"
+                    }
+                }
+            }
+        }
+
+        stage('Set tags') {
+            steps {
+
+                dir('src') {
+                    git branch: "venue",
+                    credentialsId: "${GIT_CREDS}",
+                    url: 'git@github.com:funi-main/source2-main.git'
+                    //sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
+                    //sshagent(["${GIT_CREDS}"]) {
+                    //    sh "git push git@github.com:funi-main/kane-funimation-v2.git ${JGIT_TAG}"
+                    //}
+                }
+
+            }
+        }
+    }
+}
