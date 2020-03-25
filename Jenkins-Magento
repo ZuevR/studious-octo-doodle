@@ -75,14 +75,12 @@ pipeline {
                         sh ''' #!/bin/bash
                         export HOME=${JENKINS_HOME}
                         composer clear-cache
-
                         '''
                     }
                 }
                 timestamps {
                     ansiColor('xterm') {
-                        sh ''' #!/bin/bash
-                        #!/bin/bash -x
+                        sh ''' #!/bin/bash -x
                         export HOME=${JENKINS_HOME}
                         rm -rf source2-main/venue-maintenance
                         cd source2-main/magento-store/
@@ -200,5 +198,26 @@ pipeline {
             }*/
         }
 
+        stage('Cron-Runner') {
+            when {
+                expression { params.WORK_BRANCH == "uat" }
+            }
+            steps {
+                timestamps {
+                    ansiColor('xterm') {
+                        sh ''' #!/bin/bash
+                        rm -rf *
+                        echo $WORKSPACE
+
+                        #REVISION_TAG=$(aws deploy list-application-revisions --application-name VENUE-STORE-uat --sort-by registerTime --sort-order descending --query 'revisions[].s3Location[].eTag' --output json | jq .[0])
+
+                        #REVISION_KEY=$(aws deploy list-application-revisions --application-name VENUE-STORE-uat --sort-by registerTime --sort-order descending --query 'revisions[].s3Location[].key' --output json | jq .[0])
+
+                        #aws deploy create-deployment --application-name VENUE-STORE-${GIT_BRANCH} --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name ${GIT_BRANCH}-cron --description "CRON RUNNER" --s3-location "bucket=magento-build-storage,bundleType=zip,key=$REVISION_KEY" --output json
+                        '''
+                    }
+                }
+            }
+        }
     }
 }
