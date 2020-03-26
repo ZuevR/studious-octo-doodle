@@ -64,9 +64,9 @@ pipeline {
                         url: 'git@github.com:funi-main/source2-main.git']]
                     ])
                     sh 'git tag -a -f ${JGIT_TAG} -m "Jenkins build tag"'
-                     //sshagent(["${GIT_CREDS}"]) {
-                     //   sh "git push git@github.com:funi-main/source2-main.git ${JGIT_TAG}"
-                     //}
+                    //sshagent(["${GIT_CREDS}"]) {
+                    //   sh "git push git@github.com:funi-main/source2-main.git ${JGIT_TAG}"
+                    //}
                 }
 
                 checkout([$class: 'GitSCM',
@@ -117,11 +117,7 @@ pipeline {
                 //sshagent(["${GIT_CREDS}"]) {
                 //   sh "git@github.com:funi-main/funimation-source.git ${JGIT_TAG}"
                 //}
-            }
-        }
 
-        stage('Prepare Code') {
-            steps {
                 checkout([$class: 'GitSCM',
                     branches: [[name: '*/master']],
                     doGenerateSubmoduleConfigurations: false,
@@ -133,7 +129,11 @@ pipeline {
                     userRemoteConfigs: [[credentialsId: "${GIT_CREDS}",
                     url: 'git@github.com:maxmind/geoipupdate.git']]
                 ])
+            }
+        }
 
+        stage('Prepare Code') {
+            steps {
                 timestamps {
                     ansiColor('xterm') {
                         sh ''' #!/bin/bash
@@ -145,7 +145,6 @@ pipeline {
                     }
                 }
 
-                // think should work
                 //step([
                 //    $class: 'DsbNotificationBuilder',
                 //    extensions: [
@@ -194,6 +193,8 @@ pipeline {
                             ''' */
                         }
                     }
+
+                    //cleanWs()
                 }
             }
         }
@@ -224,18 +225,15 @@ pipeline {
 
                             sed -i "s/.*FROM.*/FROM 933909558080.dkr.ecr.us-west-2.amazonaws.com\\/source2base-${APP_ENV_NAME}:latest/" Dockerfile
 
-                            if [ $APP_ENV_NAME = "qa" ]
-                            then
+                            if [ $APP_ENV_NAME = "qa" ]; then
                             echo "ADD 0002_auto_20180629_1711.config /usr/local/lib/python2.7/dist-packages/social/apps/django_app/default/migrations/0002_auto_20180629_1711.py" >> Dockerfile
                             fi
 
-                            if [ $APP_ENV_NAME = "uat" ]
-                            then
+                            if [ $APP_ENV_NAME = "uat" ]; then
                             echo "ADD 0002_auto_20180629_1711.config /usr/local/lib/python2.7/dist-packages/social/apps/django_app/default/migrations/0002_auto_20180725_2123.py" >> Dockerfile
                             fi
 
                             '''
-
 
                             /*sh '''#!/bin/bash
                             docker build \
@@ -247,7 +245,7 @@ pipeline {
                             sh ''' #!/bin/bash
                             #docker pull 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration > /dev/null
 
-                            if [ $APP_ENV_NAME = "development" ];then
+                            if [ $APP_ENV_NAME = "development" ]; then
                             docker run --rm -e APP_ENV="DEV" -e DBUSER="postgres" -e DBPASSWORD="postgressecret" \
                             933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration \
                             bash  -c 'cd /code/source && \
@@ -256,7 +254,7 @@ pipeline {
                             ./manage.py migrate --noinput'
                             fi
 
-                            if [ $APP_ENV_NAME = "qa" ];then
+                            if [ $APP_ENV_NAME = "qa" ]; then
                             docker run --rm -e APP_ENV="QA" -e DBUSER="postgres" -e DBPASSWORD="postgressecret" \
                             933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration \
                             bash -c 'cd /code/source && \
@@ -265,7 +263,7 @@ pipeline {
                             ./manage.py migrate --noinput'
                             fi
 
-                            if [ $APP_ENV_NAME = "uat" ];then
+                            if [ $APP_ENV_NAME = "uat" ]; then
                             docker run --rm -e APP_ENV="UAT" -e DBUSER="postgres" -e DBPASSWORD="2fNX1}[OQm1D" \
                             933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration \
                             bash -c 'cd /code/source && \
@@ -293,7 +291,6 @@ pipeline {
                         ws('backend-api-ws') {
                             sh 'cp -rf /var/lib/jenkins/workspace/"${JOB_NAME}"/* $WORKSPACE'
 
-                            // think should work
                             //step([
                             //    $class: 'DsbNotificationBuilder',
                             //    extensions: [
@@ -335,7 +332,6 @@ pipeline {
                             #docker push ${ECR_URL}/venue-be-${APP_ENV_NAME}:${JGIT_TAG}
                             '''*/
 
-                            // think should work
                             //step([
                             //    $class: 'DsbNotificationBuilder',
                             //    extensions: [
@@ -348,18 +344,15 @@ pipeline {
                             //])
 
                             sh '''#!/bin/bash
-                            if [ $APP_ENV_NAME = "development" ]
-                            then
+                            if [ $APP_ENV_NAME = "development" ]; then
                             ENVIRONMENT=DEV
                             fi
 
-                            if [ $APP_ENV_NAME = "qa" ]
-                            then
+                            if [ $APP_ENV_NAME = "qa" ]; then
                             ENVIRONMENT=QA
                             fi
 
-                            if [ $APP_ENV_NAME = "uat" ]
-                            then
+                            if [ $APP_ENV_NAME = "uat" ]; then
                             ENVIRONMENT=UAT
                             fi
 
@@ -383,7 +376,6 @@ pipeline {
                         ws('backend-cms-ws') {
                             sh 'cp -rf /var/lib/jenkins/workspace/"${JOB_NAME}"/* $WORKSPACE'
 
-                            // think should work
                             //step([
                             //    $class: 'DsbNotificationBuilder',
                             //    extensions: [
@@ -423,7 +415,6 @@ pipeline {
                             #docker push ${ECR_URL}/venue-be-${APP_ENV_NAME}:cms-${JGIT_TAG}
                             '''*/
 
-                            // think should work
                             //step([
                             //    $class: 'DsbNotificationBuilder',
                             //    extensions: [
@@ -436,18 +427,15 @@ pipeline {
                             //])
 
                             sh '''#!/bin/bash
-                            if [ $APP_ENV_NAME = "development" ]
-                            then
+                            if [ $APP_ENV_NAME = "development" ]; then
                             ENVIRONMENT=DEV
                             fi
 
-                            if [ $APP_ENV_NAME = "qa" ]
-                            then
+                            if [ $APP_ENV_NAME = "qa" ]; then
                             ENVIRONMENT=QA
                             fi
 
-                            if [ $APP_ENV_NAME = "uat" ]
-                            then
+                            if [ $APP_ENV_NAME = "uat" ]; then
                             ENVIRONMENT=UAT
                             fi
 
@@ -458,7 +446,6 @@ pipeline {
                             fi
                             '''
 
-                            // think should work
                             //step([
                             //    $class: 'DsbNotificationBuilder',
                             //    extensions: [
@@ -482,7 +469,6 @@ pipeline {
                         ws('backend-rqworkers-ws') {
                             sh 'cp -rf /var/lib/jenkins/workspace/"${JOB_NAME}"/* $WORKSPACE'
 
-                            // think should work
                             //step([
                             //    $class: 'DsbNotificationBuilder',
                             //    extensions: [
@@ -519,7 +505,6 @@ pipeline {
                             #docker push ${ECR_URL}/venue-be-${APP_ENV_NAME}:rqworker-${JGIT_TAG}
                             '''*/
 
-                            // think should work
                             //step([
                             //    $class: 'DsbNotificationBuilder',
                             //    extensions: [
@@ -532,18 +517,15 @@ pipeline {
                             //])
 
                             sh '''#!/bin/bash
-                            if [ $APP_ENV_NAME = "development" ]
-                            then
+                            if [ $APP_ENV_NAME = "development" ]; then
                             ENVIRONMENT=DEV
                             fi
 
-                            if [ $APP_ENV_NAME = "qa" ]
-                            then
+                            if [ $APP_ENV_NAME = "qa" ]; then
                             ENVIRONMENT=QA
                             fi
 
-                            if [ $APP_ENV_NAME = "uat" ]
-                            then
+                            if [ $APP_ENV_NAME = "uat" ]; then
                             ENVIRONMENT=UAT
                             fi
 
@@ -565,7 +547,6 @@ pipeline {
             }
         }
     }
-
 
     //post {
     //    always {
