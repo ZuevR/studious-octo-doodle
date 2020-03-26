@@ -16,13 +16,40 @@ pipeline {
                     }
                 }
 
-                git branch: '${WORK_BRANCH}',
+                dir('wordpress') {
+                    git branch: '${WORK_BRANCH}',
+                    credentialsId: "${GIT_CREDS}",
+                    url: 'git@github.com:funi-main/funimation-wordpress.git'
+                    sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
+                    //sshagent(["${GIT_CREDS}"]) {
+                    //    sh "git push git@github.com:funi-main/funimation-wordpress.git ${JGIT_TAG}"
+                    //}
+                }
+
+                git branch: 'venue',
                 credentialsId: "${GIT_CREDS}",
-                url: 'git@github.com:funi-main/funimation-wordpress.git'
-                sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
-                //sshagent(["${GIT_CREDS}"]) {
-                //    sh "git push git@github.com:funi-main/funimation-wordpress.git ${JGIT_TAG}"
-                //}
+                url: 'git@github.com:funi-main/source2-main.git'
+
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh ''' #!/bin/bash
+                $(aws ecr get-login --region=us-west-2 --no-include-email)
+                rm -rf ./blog/blog
+                mv wordpress ./blog/blog
+                cp /var/lib/jenkins/GeoLite2-City.mmdb blog/
+                '''
+
+                /*sh '''#!/bin/bash
+                docker build \
+                -t ${ECR_URL}/venue-blog-${APP_ENV}:latest \
+                -t ${ECR_URL}/venue-blog-${APP_ENV}:${JGIT_TAG} \
+                -f Dockerfile .
+                #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:latest
+                #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:${JGIT_TAG}
+                '''*/
             }
         }
     }
