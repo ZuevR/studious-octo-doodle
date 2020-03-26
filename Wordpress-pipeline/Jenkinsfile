@@ -14,14 +14,14 @@ pipeline {
                     env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-wp-dev"
                 }
             }
-        }
 
-        git branch: '${WORK_BRANCH}',
-        credentialsId: "${GIT_CREDS}",
-        url: 'git@github.com:funi-main/funimation-wordpress.git'
-        sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
-        //sshagent(["${GIT_CREDS}"]) {
-        //    sh "git push git@github.com:funi-main/funimation-wordpress.git ${JGIT_TAG}"
-        //}
+            git branch: '${WORK_BRANCH}',
+            credentialsId: "${GIT_CREDS}",
+            url: 'git@github.com:funi-main/funimation-wordpress.git'
+            sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
+            //sshagent(["${GIT_CREDS}"]) {
+            //    sh "git push git@github.com:funi-main/funimation-wordpress.git ${JGIT_TAG}"
+            //}
+        }
     }
 }
