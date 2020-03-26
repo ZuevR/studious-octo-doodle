@@ -35,7 +35,7 @@ pipeline {
 
                     /** HARDCODE for tests */
                     /* ------------------- */
-                    env.JGIT_TAG = "3.2.1640.fun-be-qa"
+                    env.JGIT_TAG = "3.2.1640.fun-be-dev"
                     /* ------------------- */
 
                     sh '$(aws ecr get-login --region=us-west-2 --no-include-email)'
@@ -194,7 +194,7 @@ pipeline {
                         }
                     }
 
-                    //cleanWs()
+                    cleanWs()
                 }
             }
         }
@@ -276,7 +276,7 @@ pipeline {
                     }
 
                     findText alsoCheckConsoleOutput: true, regexp: 'Your models have changes that are not yet reflected in a migration', unstableIfFound: true
-                    //cleanWs()
+                    cleanWs()
                 }
             }
         }
@@ -363,7 +363,7 @@ pipeline {
                             fi
                             '''
 
-                            //cleanWs()
+                            cleanWs()
                         }
                     }
                 }
@@ -456,7 +456,8 @@ pipeline {
                             //        ]
                             //    ]
                             //])
-                            //cleanWs()
+
+                            cleanWs()
                         }
                     }
                 }
@@ -540,7 +541,8 @@ pipeline {
                             #ecs deploy VENUE-${ENVIRONMENT} --region us-west-2 rqscheduler -t rqworker-${JGIT_TAG} || true
                             #ecs deploy VENUE-${ENVIRONMENT} --region us-west-2 rqworker -t rqworker-${JGIT_TAG} || true
                             '''
-                            //cleanWs()
+
+                            cleanWs()
                         }
                     }
                 }
@@ -548,9 +550,9 @@ pipeline {
         }
     }
 
-    //post {
-    //    always {
-    //      cleanWs()
-    //    }
-    //}
+    post {
+        always {
+            cleanWs()
+        }
+    }
 }
