@@ -1,10 +1,13 @@
-/** 
-* Made from "NodeBB Forum-Tag" & "NodeBB Forum"
-* NOTES: 
-* 1) Repo git@github.com:funi-main/funimation-nodebb.git doesn't contain branch "develop"
-* you will get an error if you choose "develop" as a variable for $WORK_BRANCH
-* 2) All unsafe operations related to build/run/deploy commands weren't launched/tested
-*/
+/**
+ *  Name: NodeBB Pipeline
+ *  Made from "NodeBB Forum-Tag" & "NodeBB Forum"
+ *
+ *  NOTES: 
+ *  - Repo git@github.com:funi-main/funimation-nodebb.git doesn't contain branch "develop"
+ *    You will get an error if you choose "develop" as a variable for $WORK_BRANCH
+ *
+ *  - All unsafe operations related to build/run/deploy commands weren't launched/tested
+ */
 
 pipeline {
     agent any

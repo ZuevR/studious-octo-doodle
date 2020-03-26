@@ -2,10 +2,9 @@
  *  Name: Wordpress Pipeline
  *  Made from: "WordPress-Tag GS" & "Wordpress Blog"
  *
- *
- *  Notes:
+ *  NOTES:
  *  - Repo git@github.com:funi-main/funimation-wordpress.git doesn't contain branch "development".
- *    If you will get an error if you choose "development" as a variable for $WORK_BRANCH
+ *    You will get an error if you choose "development" as a variable for $WORK_BRANCH
  *
  *  - All unsafe operations related to build/run/deploy commands weren't launched/tested
  */
