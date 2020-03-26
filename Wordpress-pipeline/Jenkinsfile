@@ -3,15 +3,17 @@ pipeline {
 
     stages {
         stage('Prepare ENV') {
-            script {
-                if ("${tagToCreate}".isEmpty()) {
-                    throw new Exception("tagToCreate field is missing, please check")
-                }
+            steps {
+                script {
+                    if ("${tagToCreate}".isEmpty()) {
+                        throw new Exception("tagToCreate field is missing, please check")
+                    }
 
-                env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-wp-${APP_ENV}"
+                    env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-wp-${APP_ENV}"
 
-                if ("${APP_ENV}" == "development") {
-                    env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-wp-dev"
+                    if ("${APP_ENV}" == "development") {
+                        env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-wp-dev"
+                    }
                 }
             }
 
