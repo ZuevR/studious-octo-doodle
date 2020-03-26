@@ -50,8 +50,8 @@ pipeline {
                 -t ${ECR_URL}/venue-blog-${APP_ENV}:latest \
                 -t ${ECR_URL}/venue-blog-${APP_ENV}:${JGIT_TAG} \
                 -f blog/Dockerfile ./blog
-                #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:latest
-                #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:${JGIT_TAG}
+                #docker push ${ECR_URL}/venue-blog-${APP_ENV}:latest
+                #docker push ${ECR_URL}/venue-blog-${APP_ENV}:${JGIT_TAG}
                 '''*/
             }
         }
