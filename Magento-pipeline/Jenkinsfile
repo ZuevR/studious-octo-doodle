@@ -1,3 +1,16 @@
+/**
+ *  Name: Magento Pipeline
+ *  Made from: "Magento-Tag GS" & "Magento Store EBS"
+ *
+ *  NOTES:
+ *
+ *  - Stage "Deploy to AWS CodeDeploy" contains the field "awsSecretKey" which is hidden.
+ *    Should be replaced to real credentials.
+ *
+ *  - All unsafe operations related to build/run/deploy commands weren't launched/tested
+ */
+
+
 pipeline {
     agent { label 'venue-ci-spot-store' }
 
@@ -43,7 +56,6 @@ pipeline {
         stage('Pre-notification') {
             steps {
                 sh 'echo "Notification"'
-                // think should work
                 //step([
                 //    $class: 'DsbNotificationBuilder',
                 //    extensions: [
@@ -121,7 +133,6 @@ pipeline {
         stage('Post-notification') {
             steps {
                 sh 'echo "Notification"'
-                // think should work
                 //step([
                 //    $class: 'DsbNotificationBuilder',
                 //    extensions: [
@@ -165,7 +176,6 @@ pipeline {
                 //        ]
                 //    ]
                 //])
-
             }
         }
 
@@ -221,7 +231,6 @@ pipeline {
             }
         }
     }
-
 
     post {
         always {
