@@ -27,8 +27,6 @@ pipeline {
                     if ("${WORK_BRANCH}" == "develop") {
                         env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-mag-dev"
                     }
-
-                    echo "$JENKINS_HOME"
                 }
             }
         }
