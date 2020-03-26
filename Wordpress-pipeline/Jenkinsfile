@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage {
+        stage('Prepare ENV') {
             script {
                 if ("${tagToCreate}".isEmpty()) {
                     throw new Exception("tagToCreate field is missing, please check")
