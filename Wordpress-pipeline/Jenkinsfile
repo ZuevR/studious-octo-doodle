@@ -7,6 +7,10 @@
  *    You will get an error if you choose "development" as a variable for $WORK_BRANCH
  *
  *  - All unsafe operations related to build/run/deploy commands weren't launched/tested
+ *
+ *  - To affect the real infrastructure, you need to remove the comments:
+ *    "// ..." and /* ... * / - in pipeline syntax
+ *    # ... - in bash syntax
  */
 
 pipeline {
