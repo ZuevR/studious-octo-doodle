@@ -10,8 +10,8 @@
  *  - All unsafe operations related to build/run/deploy commands weren't launched/tested
  *
  *  - To affect the real infrastructure, you need to remove the comments:
- *    "// ..." and /* ... * / - in pipeline syntax
- *    # ... - in bash syntax
+ *    "//" and "/*" - in pipeline syntax
+ *    "#" - in bash syntax
  */
 
 
