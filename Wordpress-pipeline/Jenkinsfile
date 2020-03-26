@@ -1,3 +1,11 @@
+/** 
+* Made from "WordPress-Tag GS" & "Wordpress Blog"
+* NOTES: 
+* 1) Repo git@github.com:funi-main/funimation-wordpress.git doesn't contain branch "development"
+* you will get an error if you choose "development" as a variable for $WORK_BRANCH
+* 2) All unsafe operations related to build/run/deploy commands weren't launched/tested
+*/
+
 pipeline {
     agent { label 'master' }
 
