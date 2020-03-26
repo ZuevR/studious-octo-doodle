@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+
+    stages {
+        stage {
+            script {
+                if ("${tagToCreate}".isEmpty()) {
+                    throw new Exception("tagToCreate field is missing, please check")
+                }
+
+                env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-wp-${WORK_BRANCH}"
+
+                if ("${WORK_BRANCH}" == "develop") {
+                    env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-wp-dev"
+                }
+            }
+        }
+
+        dir('source2-main') {
+            git branch: '${WORK_BRANCH}',
+            credentialsId: "${GIT_CREDS}",
+            url: 'git@github.com:funi-main/source2-main.git'
+            sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
+        }
+    }
+}
