@@ -45,13 +45,39 @@ pipeline {
                 cp /var/lib/jenkins/GeoLite2-City.mmdb blog/
                 '''
 
-                sh '''#!/bin/bash
+                /*sh '''#!/bin/bash
                 docker build \
                 -t ${ECR_URL}/venue-blog-${APP_ENV}:latest \
                 -t ${ECR_URL}/venue-blog-${APP_ENV}:${JGIT_TAG} \
                 -f blog/Dockerfile ./blog
                 #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:latest
                 #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:${JGIT_TAG}
+                '''*/
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh ''' #!/bin/bash
+                if [ $APP_ENV = "development" ]; then
+                echo $APP_ENV
+                #ecs deploy VENUE-DEV blog -t ${JGIT_TAG} --region us-west-2 || true
+                fi
+
+                if [ $APP_ENV = "qa" ]; then
+                echo $APP_ENV
+                #ecs deploy VENUE-QA blog -t ${JGIT_TAG} --region us-west-2 || true
+                fi
+
+                if [ $APP_ENV = "uat" ]; then
+                echo $APP_ENV
+                #ecs deploy VENUE-UAT blog -t ${JGIT_TAG} --region us-west-2 || true
+                fi
+
+                if [ $APP_ENV = "pre-prod" ]; then
+                echo $APP_ENV
+                #ecs deploy VENUE-PRE-PROD blog -t ${JGIT_TAG} --region us-west-2 || true
+                fi
                 '''
             }
         }
