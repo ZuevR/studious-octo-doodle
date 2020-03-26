@@ -38,9 +38,6 @@ pipeline {
                     env.JGIT_TAG = "3.2.1640.fun-be-qa"
                     /* ------------------- */
 
-                    env.DOCKER_BASE_COND = "${ECR_URL}/source2base-${APP_ENV_NAME}"
-                    env.DOCKER_BUILD_MIGRATION = "${ECR_URL}/venue-be-${APP_ENV_NAME}"
-
                     sh '$(aws ecr get-login --region=us-west-2 --no-include-email)'
                 }
             }
@@ -189,8 +186,8 @@ pipeline {
 
                             /*sh '''#!/bin/bash
                             docker build \
-                            -t ${DOCKER_BASE_COND}:latest \
-                            -t ${DOCKER_BASE_COND}:${JGIT_TAG} \
+                            -t ${ECR_URL}/source2base-${APP_ENV_NAME}:latest \
+                            -t ${ECR_URL}/source2base-${APP_ENV_NAME}:${JGIT_TAG} \
                             -f BaseDockerfile .
                             #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:latest
                             #docker push ${ECR_URL}/source2base-${APP_ENV_NAME}:${JGIT_TAG}
@@ -242,9 +239,9 @@ pipeline {
 
                             /*sh '''#!/bin/bash
                             docker build \
-                            -t ${DOCKER_BUILD_MIGRATION}:${JGIT_TAG}-migration \
+                            -t ${ECR_URL}/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration \
                             -f Dockerfile .
-                            #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:${JGIT_TAG}-migration
+                            #docker push ${ECR_URL}/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration
                             '''
 
                             sh ''' #!/bin/bash
@@ -331,11 +328,11 @@ pipeline {
 
                             /*sh '''#!/bin/bash
                             docker build \
-                            -t ${DOCKER_BUILD_MIGRATION}:latest \
-                            -t ${DOCKER_BUILD_MIGRATION}:${JGIT_TAG} \
+                            -t ${ECR_URL}/venue-be-${APP_ENV_NAME}:latest \
+                            -t ${ECR_URL}/venue-be-${APP_ENV_NAME}:${JGIT_TAG} \
                             -f Dockerfile .
-                            #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:latest
-                            #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:${JGIT_TAG}
+                            #docker push ${ECR_URL}/venue-be-${APP_ENV_NAME}:latest
+                            #docker push ${ECR_URL}/venue-be-${APP_ENV_NAME}:${JGIT_TAG}
                             '''*/
 
                             // think should work
@@ -419,11 +416,11 @@ pipeline {
 
                             /*sh '''#!/bin/bash
                             docker build \
-                            -t ${DOCKER_BUILD_MIGRATION}:latest \
-                            -t ${DOCKER_BUILD_MIGRATION}:cms-${JGIT_TAG} \
+                            -t ${ECR_URL}/venue-be-${APP_ENV_NAME}:latest \
+                            -t ${ECR_URL}/venue-be-${APP_ENV_NAME}:cms-${JGIT_TAG} \
                             -f Dockerfile .
-                            #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:latest
-                            #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:cms-${JGIT_TAG}
+                            #docker push ${ECR_URL}/venue-be-${APP_ENV_NAME}:latest
+                            #docker push ${ECR_URL}/venue-be-${APP_ENV_NAME}:cms-${JGIT_TAG}
                             '''*/
 
                             // think should work
@@ -515,11 +512,11 @@ pipeline {
 
                             /*sh '''#!/bin/bash
                             docker build \
-                            -t ${DOCKER_BUILD_MIGRATION}:latest \
-                            -t ${DOCKER_BUILD_MIGRATION}:rqworker-${JGIT_TAG} \
+                            -t ${ECR_URL}/venue-be-${APP_ENV_NAME}:latest \
+                            -t ${ECR_URL}/venue-be-${APP_ENV_NAME}:rqworker-${JGIT_TAG} \
                             -f Dockerfile .
-                            #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:latest
-                            #docker push ${ECR_URL}/${APP_NAME}-${APP_ENV_NAME}:rqworker-${JGIT_TAG}
+                            #docker push ${ECR_URL}/venue-be-${APP_ENV_NAME}:latest
+                            #docker push ${ECR_URL}/venue-be-${APP_ENV_NAME}:rqworker-${JGIT_TAG}
                             '''*/
 
                             // think should work
