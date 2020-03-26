@@ -16,7 +16,7 @@ pipeline {
             }
         }
 
-        dir('source2-main') {
+        dir('funimation-wordpress') {
             git branch: '${WORK_BRANCH}',
             credentialsId: "${GIT_CREDS}",
             url: 'git@github.com:funi-main/funimation-wordpress.git'
