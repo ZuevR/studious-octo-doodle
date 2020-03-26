@@ -8,9 +8,9 @@ pipeline {
                     throw new Exception("tagToCreate field is missing, please check")
                 }
 
-                env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-wp-${WORK_BRANCH}"
+                env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-wp-${APP_ENV}"
 
-                if ("${WORK_BRANCH}" == "develop") {
+                if ("${APP_ENV}" == "development") {
                     env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-wp-dev"
                 }
             }
