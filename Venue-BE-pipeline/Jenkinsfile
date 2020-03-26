@@ -1,3 +1,11 @@
+/**
+ *  Name: Main Pipeline
+ *  Made from "NodeBB Forum-Tag" & "NodeBB Forum"
+ *
+ *  NOTES: 
+ *  - All unsafe operations related to build/run/deploy commands weren't launched/tested
+ */
+
 pipeline {
     agent any
 
