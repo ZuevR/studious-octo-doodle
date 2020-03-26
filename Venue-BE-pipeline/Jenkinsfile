@@ -4,9 +4,12 @@
  *  "Venue Backend - API" & "Venue Backend - CMS" & "Venue Backend - RqWorkers"
  *
  *  NOTES: 
+ *
+ *  - $JGIT_TAG is hardcoded for test run the following command:
+ *    "docker pull 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration > /dev/null",
+ *    as the Jenkins'es instance test is used
+ *
  *  - All unsafe operations related to build/run/deploy commands weren't launched/tested
- *  
- *  - $JGIT_TAG is hardcoded for safe executing pull command 'docker pull ...'
  */
 
 pipeline {
