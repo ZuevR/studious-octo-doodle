@@ -1,9 +1,12 @@
 /**
- *  Name: Main Pipeline
- *  Made from "NodeBB Forum-Tag" & "NodeBB Forum"
+ *  Name: Venue BE Pipeline
+ *  Made from: "0 Venue BE START GS" & "Venue Backend Tag" & "Venue Migrations" &
+ *  "Venue Backend - API" & "Venue Backend - CMS" & "Venue Backend - RqWorkers"
  *
  *  NOTES: 
  *  - All unsafe operations related to build/run/deploy commands weren't launched/tested
+ *  
+ *  - $JGIT_TAG is hardcoded for safe executing pull command 'docker pull ...'
  */
 
 pipeline {
