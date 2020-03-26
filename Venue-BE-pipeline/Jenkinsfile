@@ -243,7 +243,7 @@ pipeline {
                             '''
 
                             sh ''' #!/bin/bash
-                            #docker pull 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration > /dev/null
+                            docker pull 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${APP_ENV_NAME}:${JGIT_TAG}-migration > /dev/null
 
                             if [ $APP_ENV_NAME = "development" ]; then
                             docker run --rm -e APP_ENV="DEV" -e DBUSER="postgres" -e DBPASSWORD="postgressecret" \
@@ -275,7 +275,7 @@ pipeline {
                         }
                     }
 
-                    //findText alsoCheckConsoleOutput: true, regexp: 'Your models have changes that are not yet reflected in a migration', unstableIfFound: true
+                    findText alsoCheckConsoleOutput: true, regexp: 'Your models have changes that are not yet reflected in a migration', unstableIfFound: true
                     //cleanWs()
                 }
             }
