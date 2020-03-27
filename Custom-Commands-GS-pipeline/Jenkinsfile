@@ -45,15 +45,18 @@ pipeline {
                 exit 0
                 fi
 
-                if [ WORK_BRANCH = "development" ]; then
+                if [ $WORK_BRANCH = "development" ]; then
+                echo $WORK_BRANCH
                 #docker run --rm -e APP_ENV="DEV" 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${WORK_BRANCH}:latest bash -c "cd /code/source && $COMMAND"
                 fi
 
-                if [ WORK_BRANCH = "qa" ]; then
+                if [ $WORK_BRANCH = "qa" ]; then
+                echo $WORK_BRANCH
                 #docker run --rm -e APP_ENV="QA" 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${WORK_BRANCH}:latest bash  -c "cd /code/source && $COMMAND"
                 fi
 
-                if [ WORK_BRANCH = "uat" ]; then
+                if [ $WORK_BRANCH = "uat" ]; then
+                echo $WORK_BRANCH
                 #docker run --rm -e APP_ENV="UAT" 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${WORK_BRANCH}:latest bash  -c "cd /code/source && $COMMAND"
                 fi
                 '''
@@ -71,15 +74,18 @@ pipeline {
                 exit 0
                 fi
 
-                if [ WORK_BRANCH = "development" ]; then
+                if [ $WORK_BRANCH = "development" ]; then
+                echo $WORK_BRANCH
                 #docker run --rm -e APP_ENV="DEV" 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-fe-${WORK_BRANCH}:latest bash -c "cd /src/kane && $COMMAND"
                 fi
 
-                if [ WORK_BRANCH = "qa" ]; then
+                if [ $WORK_BRANCH = "qa" ]; then
+                echo $WORK_BRANCH
                 #docker run --rm -e APP_ENV="QA" 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-fe-${WORK_BRANCH}:latest bash  -c "cd /src/kane && $COMMAND"
                 fi
 
-                if [ WORK_BRANCH = "uat" ]; then
+                if [ $WORK_BRANCH = "uat" ]; then
+                echo $WORK_BRANCH
                 #docker run --rm -e APP_ENV="UAT" 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-fe-${WORK_BRANCH}:latest bash  -c "cd /src/kane && $COMMAND"
                 fi
                 '''
