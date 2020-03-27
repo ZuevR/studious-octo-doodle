@@ -31,11 +31,60 @@ pipeline {
                 //}
             }
         }
+
+        stage('Build') {
+            steps {
+                sh ''' #!/bin/bash
+                mv proxy/* ./ && rm -rf proxy
+
+                $(aws ecr get-login --region=us-west-2 --no-include-email)
+
+                /*sh '''#!/bin/bash
+                docker build \
+                -t ${ECR_URL}/venue-proxy-${WORK_BRANCH}:latest \
+                -t ${ECR_URL}/venue-proxy-${WORK_BRANCH}:${JGIT_TAG} \
+                -f blog/Dockerfile ./blog
+                #docker push ${ECR_URL}/venue-proxy-${WORK_BRANCH}:latest
+                #docker push ${ECR_URL}/venue-proxy-${WORK_BRANCH}:${JGIT_TAG}
+                '''*/
+                '''
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                /*sh '''#!/bin/bash
+                if [ $WORK_BRANCH = "development" ]; then
+                echo $WORK_BRANCH
+                #ecs deploy VENUE-DEV blogs3 -t ${JGIT_TAG} --region us-west-2 || true
+                #ecs deploy VENUE-DEV proxy -t ${JGIT_TAG} --region us-west-2 || true
+                fi
+
+                if [ $WORK_BRANCH = "qa" ]; then
+                echo $WORK_BRANCH
+                #ecs deploy VENUE-QA blogs3 -t ${JGIT_TAG} --region us-west-2 || true
+                #ecs deploy VENUE-QA proxy -t ${JGIT_TAG} --region us-west-2 || true
+                fi
+
+                if [ $WORK_BRANCH = "uat" ]; then
+                echo $WORK_BRANCH
+                #ecs deploy VENUE-UAT blogs3 -t ${JGIT_TAG} --region us-west-2 || true
+                #ecs deploy VENUE-UAT proxy -t ${JGIT_TAG} --region us-west-2 || true
+                fi
+
+                if [ $WORK_BRANCH = "pre-prod" ]; then
+                echo $WORK_BRANCH
+                #ecs deploy VENUE-PRE-PROD blogs3 -t ${JGIT_TAG} --region us-west-2 || true
+                #ecs deploy VENUE-PRE-PROD proxy -t ${JGIT_TAG} --region us-west-2 || true
+                fi
+                '''*/
+            }
+        }
     }
 
-    //post {
-    //    always {
-    //      cleanWs()
-    //    }
-    //}
+    post {
+        always {
+          cleanWs()
+        }
+    }
 }
