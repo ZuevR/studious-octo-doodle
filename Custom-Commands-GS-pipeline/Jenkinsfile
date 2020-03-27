@@ -4,26 +4,32 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh ''' #!/bin/bash
-                ls ~/.aws
-                rm ~/.aws/credentials
-                rm ~/.aws/config
+                script {
+                    try {
+                        sh ''' #!/bin/bash
+                        ls ~/.aws
+                        rm ~/.aws/credentials
+                        rm ~/.aws/config
 
-                $(aws ecr get-login --region=us-west-2 --no-include-email)
+                        $(aws ecr get-login --region=us-west-2 --no-include-email)
 
-                if [ $SERVICE = "FRONTEND" ]; then
-                echo $SERVICE
-                #docker pull 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-fe-${WORK_BRANCH}:latest
-                fi
+                        if [ $SERVICE = "FRONTEND" ]; then
+                        echo $SERVICE
+                        #docker pull 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-fe-${WORK_BRANCH}:latest
+                        fi
 
 
-                if [ $SERVICE = "BACKEND" ]; then
-                echo $SERVICE
-                #docker pull 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${WORK_BRANCH}:latest
-                fi
+                        if [ $SERVICE = "BACKEND" ]; then
+                        echo $SERVICE
+                        #docker pull 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${WORK_BRANCH}:latest
+                        fi
 
-                echo $(hostname)
-                '''
+                        echo $(hostname)
+                        '''
+                    } catch(E) {
+                        sh 'echo $E'
+                    }
+                }
             }
         }
     }
