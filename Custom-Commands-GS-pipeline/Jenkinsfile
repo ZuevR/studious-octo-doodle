@@ -26,8 +26,8 @@ pipeline {
 
                         echo $(hostname)
                         '''
-                    } catch(E) {
-                        sh 'echo $E'
+                    } catch(err) {
+                        sh err.getMessage()
                     }
                 }
             }
