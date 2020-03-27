@@ -1,3 +1,18 @@
+/**
+ *  Name: Nginx Proxy Pipeline
+ *  Made from: "Nginx Proxy-Tag" & "Nginx Proxy"
+ *
+ *  NOTES:
+ *  - Current credentials aren't valid for "git@github.com:DADC-NMS/source2-main.git" repo.
+ *    The following error will be received: "CredentialId 'dsb-venue' could not be found"
+ *
+ *  - All unsafe operations related to build/run/deploy commands weren't launched/tested
+ *
+ *  - To affect the real infrastructure, you need to remove the comments:
+ *    "//" and "/*" - in pipeline syntax
+ *    "#" - in bash syntax
+ */
+
 pipeline {
     agent any
 
