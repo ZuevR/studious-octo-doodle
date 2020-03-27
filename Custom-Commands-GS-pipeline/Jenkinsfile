@@ -33,5 +33,61 @@ pipeline {
                 }
             }
         }
+
+        stage('Run BE') {
+            when {
+                expression { SERVICE == 'BACKEND' }
+            }
+            steps {
+                sh ''' #!/bin/bash
+                if [[ $COMMAND =~ .*clear_media.* ]]; then
+                echo "Dangerous Command. Please raise a ticket, if this is intentional."
+                exit 0
+                fi
+
+                if [ WORK_BRANCH = "development" ]; then
+                #docker run --rm -e APP_ENV="DEV" 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${WORK_BRANCH}:latest bash -c "cd /code/source && $COMMAND"
+                fi
+
+                if [ WORK_BRANCH = "qa" ]; then
+                #docker run --rm -e APP_ENV="QA" 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${WORK_BRANCH}:latest bash  -c "cd /code/source && $COMMAND"
+                fi
+
+                if [ WORK_BRANCH = "uat" ]; then
+                #docker run --rm -e APP_ENV="UAT" 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${WORK_BRANCH}:latest bash  -c "cd /code/source && $COMMAND"
+                fi
+                '''
+            }
+        }
+
+        stage('Run BE') {
+            when {
+                expression { SERVICE == 'FRONTEND' }
+            }
+            steps {
+                sh ''' #!/bin/bash
+                if [[ $COMMAND =~ .*clear_media.* ]]
+                then
+                   echo "Dangerous Command. Please raise a ticket, if this is intentional."
+                   exit 0
+                fi
+
+                if [ WORK_BRANCH = "development" ]
+                then
+                #docker run --rm -e APP_ENV="DEV" 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-fe-${WORK_BRANCH}:latest bash -c "cd /src/kane && $COMMAND"
+                fi
+
+                if [ WORK_BRANCH = "qa" ]
+                then
+                #docker run --rm -e APP_ENV="QA" 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-fe-${WORK_BRANCH}:latest bash  -c "cd /src/kane && $COMMAND"
+                fi
+
+                if [ WORK_BRANCH = "uat" ]
+                then
+                #docker run --rm -e APP_ENV="UAT" 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-fe-${WORK_BRANCH}:latest bash  -c "cd /src/kane && $COMMAND"
+                fi
+                '''
+            }
+        }
     }
 }
