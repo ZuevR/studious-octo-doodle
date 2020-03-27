@@ -1,11 +1,38 @@
 pipeline {
     agent any
+
+    options { disableConcurrentBuilds() }
     
     stages {
-        stage {
-            
+        stage('Prepare ENV') {
+            steps {
+                script {
+                    if ("${tagToCreate}".isEmpty()) {
+                        throw new Exception("tagToCreate field is missing, please check")
+                    }
+
+                    env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-proxy-${WORK_BRANCH}"
+
+                    if ("${WORK_BRANCH}" == "development") {
+                        env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-proxy-dev"
+                    }
+                }
+            }
+        }
+
+        stage('Set tags') {
+            steps {
+                git branch: 'venue',
+                credentialsId: "${GIT_CREDS}",
+                url: 'git@github.com:DADC-NMS/source2-main.git'
+                sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
+                //sshagent(["${GIT_CREDS}"]) {
+                //    sh "git push git@github.com:DADC-NMS/source2-main.git ${JGIT_TAG}"
+                //}
+            }
         }
     }
+
     //post {
     //    always {
     //      cleanWs()
