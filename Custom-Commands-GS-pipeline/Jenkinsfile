@@ -1,0 +1,107 @@
+/**
+ *  Name: Custom Commands GS Pipeline
+ *  Made from: "Custom Commands GS"
+ *
+ *  NOTES:
+ *  - All unsafe operations related to build/run/deploy commands weren't launched/tested
+ *
+ *  - To affect the real infrastructure, you need to remove the comments:
+ *    "//" and "/*" - in pipeline syntax
+ *    "#" - in bash syntax
+ */
+
+pipeline {
+    agent { label 'master' }
+
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    try {
+                        sh ''' #!/bin/bash
+                        ls ~/.aws
+                        rm ~/.aws/credentials
+                        rm ~/.aws/config
+                        '''
+                    } catch(err) {
+                        echo err.getMessage()
+                    }
+                    sh ''' #!/bin/bash
+                    $(aws ecr get-login --region=us-west-2 --no-include-email)
+
+                    if [ $SERVICE = "FRONTEND" ]; then
+                    echo $SERVICE
+                    #docker pull 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-fe-${WORK_BRANCH}:latest
+                    fi
+
+
+                    if [ $SERVICE = "BACKEND" ]; then
+                    echo $SERVICE
+                    #docker pull 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${WORK_BRANCH}:latest
+                    fi
+
+                    echo $(hostname)
+                    '''
+                }
+            }
+        }
+
+        stage('Run BE') {
+            when {
+                expression { SERVICE == 'BACKEND' }
+            }
+            steps {
+                sh ''' #!/bin/bash
+                if [[ $COMMAND =~ .*clear_media.* ]]; then
+                echo "Dangerous Command. Please raise a ticket, if this is intentional."
+                exit 0
+                fi
+
+                if [ $WORK_BRANCH = "development" ]; then
+                echo $WORK_BRANCH
+                #docker run --rm -e APP_ENV="DEV" 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${WORK_BRANCH}:latest bash -c "cd /code/source && $COMMAND"
+                fi
+
+                if [ $WORK_BRANCH = "qa" ]; then
+                echo $WORK_BRANCH
+                #docker run --rm -e APP_ENV="QA" 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${WORK_BRANCH}:latest bash  -c "cd /code/source && $COMMAND"
+                fi
+
+                if [ $WORK_BRANCH = "uat" ]; then
+                echo $WORK_BRANCH
+                #docker run --rm -e APP_ENV="UAT" 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-be-${WORK_BRANCH}:latest bash  -c "cd /code/source && $COMMAND"
+                fi
+                '''
+            }
+        }
+
+        stage('Run FE') {
+            when {
+                expression { SERVICE == 'FRONTEND' }
+            }
+            steps {
+                sh ''' #!/bin/bash
+                if [[ $COMMAND =~ .*clear_media.* ]]; then
+                echo "Dangerous Command. Please raise a ticket, if this is intentional."
+                exit 0
+                fi
+
+                if [ $WORK_BRANCH = "development" ]; then
+                echo $WORK_BRANCH
+                #docker run --rm -e APP_ENV="DEV" 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-fe-${WORK_BRANCH}:latest bash -c "cd /src/kane && $COMMAND"
+                fi
+
+                if [ $WORK_BRANCH = "qa" ]; then
+                echo $WORK_BRANCH
+                #docker run --rm -e APP_ENV="QA" 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-fe-${WORK_BRANCH}:latest bash  -c "cd /src/kane && $COMMAND"
+                fi
+
+                if [ $WORK_BRANCH = "uat" ]; then
+                echo $WORK_BRANCH
+                #docker run --rm -e APP_ENV="UAT" 933909558080.dkr.ecr.us-west-2.amazonaws.com/venue-fe-${WORK_BRANCH}:latest bash  -c "cd /src/kane && $COMMAND"
+                fi
+                '''
+            }
+        }
+    }
+}

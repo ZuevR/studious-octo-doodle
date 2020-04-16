@@ -1,9 +1,105 @@
+/**
+ *  Name: Nginx Proxy Pipeline
+ *  Made from: "Nginx Proxy-Tag" & "Nginx Proxy"
+ *
+ *  NOTES:
+ *  - Current credentials aren't valid for "git@github.com:DADC-NMS/source2-main.git" repo.
+ *    The following error will be received: "CredentialId 'dsb-venue' could not be found"
+ *
+ *  - All unsafe operations related to build/run/deploy commands weren't launched/tested
+ *
+ *  - To affect the real infrastructure, you need to remove the comments:
+ *    "//" and "/*" - in pipeline syntax
+ *    "#" - in bash syntax
+ */
+
 pipeline {
     agent any
+
+    options { disableConcurrentBuilds() }
     
     stages {
-        stage {
-            
+        stage('Prepare ENV') {
+            steps {
+                script {
+                    if ("${tagToCreate}".isEmpty()) {
+                        throw new Exception("tagToCreate field is missing, please check")
+                    }
+
+                    env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-proxy-${WORK_BRANCH}"
+
+                    if ("${WORK_BRANCH}" == "development") {
+                        env.JGIT_TAG = "${tagToCreate}.${BUILD_NUMBER}.fun-proxy-dev"
+                    }
+                }
+            }
+        }
+
+        stage('Set tags') {
+            steps {
+                git branch: 'venue',
+                credentialsId: "${GIT_CREDS}",
+                url: 'git@github.com:DADC-NMS/source2-main.git'
+                sh 'git tag -a -f ${JGIT_TAG} -m "Creating version from ${BUILD_URL}"'
+                //sshagent(["${GIT_CREDS}"]) {
+                //    sh "git push git@github.com:DADC-NMS/source2-main.git ${JGIT_TAG}"
+                //}
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh ''' #!/bin/bash
+                mv proxy/* ./ && rm -rf proxy
+
+                $(aws ecr get-login --region=us-west-2 --no-include-email)
+
+                /*sh '''#!/bin/bash
+                docker build \
+                -t ${ECR_URL}/venue-proxy-${WORK_BRANCH}:latest \
+                -t ${ECR_URL}/venue-proxy-${WORK_BRANCH}:${JGIT_TAG} \
+                -f blog/Dockerfile ./blog
+                #docker push ${ECR_URL}/venue-proxy-${WORK_BRANCH}:latest
+                #docker push ${ECR_URL}/venue-proxy-${WORK_BRANCH}:${JGIT_TAG}
+                '''*/
+                '''
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                /*sh '''#!/bin/bash
+                if [ $WORK_BRANCH = "development" ]; then
+                echo $WORK_BRANCH
+                #ecs deploy VENUE-DEV blogs3 -t ${JGIT_TAG} --region us-west-2 || true
+                #ecs deploy VENUE-DEV proxy -t ${JGIT_TAG} --region us-west-2 || true
+                fi
+
+                if [ $WORK_BRANCH = "qa" ]; then
+                echo $WORK_BRANCH
+                #ecs deploy VENUE-QA blogs3 -t ${JGIT_TAG} --region us-west-2 || true
+                #ecs deploy VENUE-QA proxy -t ${JGIT_TAG} --region us-west-2 || true
+                fi
+
+                if [ $WORK_BRANCH = "uat" ]; then
+                echo $WORK_BRANCH
+                #ecs deploy VENUE-UAT blogs3 -t ${JGIT_TAG} --region us-west-2 || true
+                #ecs deploy VENUE-UAT proxy -t ${JGIT_TAG} --region us-west-2 || true
+                fi
+
+                if [ $WORK_BRANCH = "pre-prod" ]; then
+                echo $WORK_BRANCH
+                #ecs deploy VENUE-PRE-PROD blogs3 -t ${JGIT_TAG} --region us-west-2 || true
+                #ecs deploy VENUE-PRE-PROD proxy -t ${JGIT_TAG} --region us-west-2 || true
+                fi
+                '''*/
+            }
+        }
+    }
+
+    post {
+        always {
+          cleanWs()
         }
     }
 }
