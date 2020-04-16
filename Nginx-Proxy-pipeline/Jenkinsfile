@@ -82,7 +82,7 @@ pipeline {
                 fi
 
                 if [ $WORK_BRANCH = "uat" ]; then
-                echo $WORK_BRANCH
+                echo $1
                 #ecs deploy VENUE-UAT blogs3 -t ${JGIT_TAG} --region us-west-2 || true
                 #ecs deploy VENUE-UAT proxy -t ${JGIT_TAG} --region us-west-2 || true
                 fi
